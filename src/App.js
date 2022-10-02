@@ -1,9 +1,15 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import "./App.css";
+import LoadingScreen from "./components/LoadingScreen";
 import styles from "./styles/Home.module.css";
+/* nav functions */
+import { windDegreesToName } from "./utils/nav";
 
 function App() {
+  /* app settings */
+  const [timezoneValue, setTimezoneValue] = useState("UTC");
+  /* state variables */
   const [heyshamTideData, setHeyshamTideData] = useState({});
   const [warrenpointTideData, setWarrenpointTideData] = useState({});
   const [heyshamWindData, setHeyshamWindData] = useState({});
@@ -11,6 +17,8 @@ function App() {
   const [loaded, setLoaded] = useState(false);
 
   const [displayData, setDisplayData] = useState({});
+  const [currentHeysham, setCurrentHeysham] = useState({});
+  const [currentWarrenpoint, setCurrentWarrenpoint] = useState({});
   /* fetch data */
   const fetchData = async () => {
     /* fetching tide data */
@@ -36,6 +44,7 @@ function App() {
     /* manage heysham data */
     //2022-09-25T05:19:00
     const currentDate = new Date();
+    console.log(currentDate);
     let _displayData;
     for (const event in heyshamTideDataRes.data.data.tidalEventList) {
       const _date = heyshamTideDataRes.data.data.tidalEventList[event].dateTime;
@@ -43,40 +52,95 @@ function App() {
       const _dateObj = new Date(_date);
       if (_dateObj > currentDate) {
         //first major event that will happen
+        const _date1 = heyshamTideDataRes.data.data.tidalEventList[Number.parseInt(event)].dateTime;
+        const _date2 = heyshamTideDataRes.data.data.tidalEventList[Number.parseInt(event)+1].dateTime;
+        const _date3 = heyshamTideDataRes.data.data.tidalEventList[Number.parseInt(event)+2].dateTime;
+        const _date4 = heyshamTideDataRes.data.data.tidalEventList[Number.parseInt(event)+3].dateTime;
+        let _dateObj1;
+        let _dateObj2;
+        let _dateObj3;
+        let _dateObj4;
+        if(timezoneValue==="UTC"){
+          _dateObj1 = new Date(_date1);
+          _dateObj2 = new Date(_date2);
+          _dateObj3 = new Date(_date3);
+          _dateObj4 = new Date(_date4);
+        }
+        if(timezoneValue==="en-GB"){
+          _dateObj1 = new Date(_date1).toLocaleString("en-GB");
+          _dateObj2 = new Date(_date2).toLocaleString("en-GB");
+          _dateObj3 = new Date(_date3).toLocaleString("en-GB");
+          _dateObj4 = new Date(_date4).toLocaleString("en-GB");
+        }
         _displayData = {
           ...displayData,
           heyshamTides: [
             {
-              time: heyshamTideDataRes.data.data.tidalEventList[
-                Number.parseInt(event)
-              ].dateTime,
+              time:
+                _dateObj1,
               height:
                 heyshamTideDataRes.data.data.tidalEventList[
                   Number.parseInt(event)
                 ].height,
             },
             {
-              time: heyshamTideDataRes.data.data.tidalEventList[
-                Number.parseInt(event) + 1
-              ].dateTime,
+              time:
+                heyshamTideDataRes.data.data.tidalEventList[
+                  Number.parseInt(event) + 1
+                ].dateTime.split("T")[0] +
+                " " +
+                heyshamTideDataRes.data.data.tidalEventList[
+                  Number.parseInt(event) + 1
+                ].dateTime
+                  .split("T")[1]
+                  .split(":")[0] +
+                heyshamTideDataRes.data.data.tidalEventList[
+                  Number.parseInt(event) + 1
+                ].dateTime
+                  .split("T")[1]
+                  .split(":")[1],
               height:
                 heyshamTideDataRes.data.data.tidalEventList[
                   Number.parseInt(event) + 1
                 ].height,
             },
             {
-              time: heyshamTideDataRes.data.data.tidalEventList[
-                Number.parseInt(event) + 2
-              ].dateTime,
+              time:
+                heyshamTideDataRes.data.data.tidalEventList[
+                  Number.parseInt(event) + 2
+                ].dateTime.split("T")[0] +
+                " " +
+                heyshamTideDataRes.data.data.tidalEventList[
+                  Number.parseInt(event) + 2
+                ].dateTime
+                  .split("T")[1]
+                  .split(":")[0] +
+                heyshamTideDataRes.data.data.tidalEventList[
+                  Number.parseInt(event) + 2
+                ].dateTime
+                  .split("T")[1]
+                  .split(":")[1],
               height:
                 heyshamTideDataRes.data.data.tidalEventList[
                   Number.parseInt(event) + 2
                 ].height,
             },
             {
-              time: heyshamTideDataRes.data.data.tidalEventList[
-                Number.parseInt(event) + 3
-              ].dateTime,
+              time:
+                heyshamTideDataRes.data.data.tidalEventList[
+                  Number.parseInt(event) + 3
+                ].dateTime.split("T")[0] +
+                " " +
+                heyshamTideDataRes.data.data.tidalEventList[
+                  Number.parseInt(event) + 3
+                ].dateTime
+                  .split("T")[1]
+                  .split(":")[0] +
+                heyshamTideDataRes.data.data.tidalEventList[
+                  Number.parseInt(event) + 3
+                ].dateTime
+                  .split("T")[1]
+                  .split(":")[1],
               height:
                 heyshamTideDataRes.data.data.tidalEventList[
                   Number.parseInt(event) + 3
@@ -95,44 +159,90 @@ function App() {
         warrenpointTideDataRes.data.data.tidalEventList[event].dateTime;
       /* compare currentDate and _date and check which is later */
       const _dateObj = new Date(_date);
-      console.log(event);
-      console.log(Number.parseInt(event) + 1);
       if (_dateObj > currentDate) {
         //first major event that will happen
         setDisplayData({
           ..._displayData,
           warrenpointTides: [
             {
-              time: warrenpointTideDataRes.data.data.tidalEventList[
-                Number.parseInt(event)
-              ].dateTime,
+              time:
+                warrenpointTideDataRes.data.data.tidalEventList[
+                  Number.parseInt(event)
+                ].dateTime.split("T")[0] +
+                " " +
+                warrenpointTideDataRes.data.data.tidalEventList[
+                  Number.parseInt(event)
+                ].dateTime
+                  .split("T")[1]
+                  .split(":")[0] +
+                warrenpointTideDataRes.data.data.tidalEventList[
+                  Number.parseInt(event)
+                ].dateTime
+                  .split("T")[1]
+                  .split(":")[1],
               height:
                 warrenpointTideDataRes.data.data.tidalEventList[
                   Number.parseInt(event)
                 ].height,
             },
             {
-              time: warrenpointTideDataRes.data.data.tidalEventList[
-                Number.parseInt(event) + 1
-              ].dateTime,
+              time:
+                warrenpointTideDataRes.data.data.tidalEventList[
+                  Number.parseInt(event) + 1
+                ].dateTime.split("T")[0] +
+                " " +
+                warrenpointTideDataRes.data.data.tidalEventList[
+                  Number.parseInt(event) + 1
+                ].dateTime
+                  .split("T")[1]
+                  .split(":")[0] +
+                warrenpointTideDataRes.data.data.tidalEventList[
+                  Number.parseInt(event) + 1
+                ].dateTime
+                  .split("T")[1]
+                  .split(":")[1],
               height:
                 warrenpointTideDataRes.data.data.tidalEventList[
                   Number.parseInt(event) + 1
                 ].height,
             },
             {
-              time: warrenpointTideDataRes.data.data.tidalEventList[
-                Number.parseInt(event) + 2
-              ].dateTime,
+              time:
+                warrenpointTideDataRes.data.data.tidalEventList[
+                  Number.parseInt(event) + 2
+                ].dateTime.split("T")[0] +
+                " " +
+                warrenpointTideDataRes.data.data.tidalEventList[
+                  Number.parseInt(event) + 2
+                ].dateTime
+                  .split("T")[1]
+                  .split(":")[0] +
+                warrenpointTideDataRes.data.data.tidalEventList[
+                  Number.parseInt(event) + 2
+                ].dateTime
+                  .split("T")[1]
+                  .split(":")[1],
               height:
                 warrenpointTideDataRes.data.data.tidalEventList[
                   Number.parseInt(event) + 2
                 ].height,
             },
             {
-              time: warrenpointTideDataRes.data.data.tidalEventList[
-                Number.parseInt(event) + 3
-              ].dateTime,
+              time:
+                warrenpointTideDataRes.data.data.tidalEventList[
+                  Number.parseInt(event) + 3
+                ].dateTime.split("T")[0] +
+                " " +
+                warrenpointTideDataRes.data.data.tidalEventList[
+                  Number.parseInt(event) + 3
+                ].dateTime
+                  .split("T")[1]
+                  .split(":")[0] +
+                warrenpointTideDataRes.data.data.tidalEventList[
+                  Number.parseInt(event) + 3
+                ].dateTime
+                  .split("T")[1]
+                  .split(":")[1],
               height:
                 warrenpointTideDataRes.data.data.tidalEventList[
                   Number.parseInt(event) + 3
@@ -145,6 +255,152 @@ function App() {
       }
     }
     //
+    /* setting the current tide height and checking whether it's flood or ebb */
+    //tidalHeightOccurrenceList
+    //heysham
+    for (const event in heyshamTideDataRes.data.data
+      .tidalHeightOccurrenceList) {
+      const _date =
+        heyshamTideDataRes.data.data.tidalHeightOccurrenceList[event].dateTime;
+
+      /* compare currentDate and _date and check which is later */
+      const _dateObj = new Date(_date);
+      if (_dateObj > currentDate) {
+        /* get the value of the current height of the tide */
+        /* calculate value for current time by interpolating values from the array */
+        const h = 30;
+        const x0 = 30;
+        /* get current minutes */
+        const m = new Date().getMinutes();
+        /* get current seconds */
+        const s = new Date().getSeconds();
+        /* get current amount of minutes and seconds */
+        let x = m + s / 60;
+        if (x > 30) {
+          x = x - 30;
+        }
+        /* read values from the array */
+        const ym1 = Number.parseFloat(
+          heyshamTideDataRes.data.data.tidalHeightOccurrenceList[
+            Number.parseInt(event) - 1
+          ].height
+        );
+        const y0 = Number.parseFloat(
+          heyshamTideDataRes.data.data.tidalHeightOccurrenceList[
+            Number.parseInt(event)
+          ].height
+        );
+        const yp1 = Number.parseFloat(
+          heyshamTideDataRes.data.data.tidalHeightOccurrenceList[
+            Number.parseInt(event) + 1
+          ].height
+        );
+
+        /* calculate the value of the current height of the tide */
+        /* do a cubic interpolation of the value */
+        const y =
+          y0 +
+          (0.5 * (yp1 - ym1) * (x - x0)) / h +
+          (0.5 * (yp1 - 2 * y0 + ym1) * (x - x0) * (x - x0)) / (h * h);
+
+        const _currentHeyshamHeight = y;
+        /* check if flood or ebb */
+        /* if consequent is higher than previous then it is flood */
+        if (
+          heyshamTideDataRes.data.data.tidalHeightOccurrenceList[
+            Number.parseInt(event) - 1
+          ].height <
+          heyshamTideDataRes.data.data.tidalHeightOccurrenceList[
+            Number.parseInt(event)
+          ].height
+        ) {
+          setCurrentHeysham({
+            ...currentHeysham,
+            height: _currentHeyshamHeight,
+            tideState: "flood",
+          });
+        } else {
+          setCurrentHeysham({
+            ...currentHeysham,
+            height: _currentHeyshamHeight,
+            tideState: "ebb",
+          });
+        }
+        break;
+      }
+    }
+    //warrenpoint
+    for (const event in warrenpointTideDataRes.data.data
+      .tidalHeightOccurrenceList) {
+      const _date =
+        warrenpointTideDataRes.data.data.tidalHeightOccurrenceList[event]
+          .dateTime;
+      /* compare currentDate and _date and check which is later */
+      const _dateObj = new Date(_date);
+      if (_dateObj > currentDate) {
+        /* calculate value for current time by interpolating values from the array */
+        const h = 30;
+        const x0 = 30;
+        /* get current minutes */
+        const m = new Date().getMinutes();
+        /* get current seconds */
+        const s = new Date().getSeconds();
+        /* get current amount of minutes and seconds */
+        let x = m + s / 60;
+        if (x > 30) {
+          x = x - 30;
+        }
+        /* read values from the array */
+        const ym1 = Number.parseFloat(
+          warrenpointTideDataRes.data.data.tidalHeightOccurrenceList[
+            Number.parseInt(event) - 1
+          ].height
+        );
+        const y0 = Number.parseFloat(
+          warrenpointTideDataRes.data.data.tidalHeightOccurrenceList[
+            Number.parseInt(event)
+          ].height
+        );
+        const yp1 = Number.parseFloat(
+          warrenpointTideDataRes.data.data.tidalHeightOccurrenceList[
+            Number.parseInt(event) + 1
+          ].height
+        );
+
+        /* calculate the value of the current height of the tide */
+        /* do a cubic interpolation of the value */
+        const y =
+          y0 +
+          (0.5 * (yp1 - ym1) * (x - x0)) / h +
+          (0.5 * (yp1 - 2 * y0 + ym1) * (x - x0) * (x - x0)) / (h * h);
+
+        const _currentWarrenpointHeight = y;
+
+        /* check if flood or ebb */
+        /* if consequent is higher than previous then it is flood */
+        if (
+          warrenpointTideDataRes.data.data.tidalHeightOccurrenceList[
+            Number.parseInt(event) - 1
+          ].height <
+          warrenpointTideDataRes.data.data.tidalHeightOccurrenceList[
+            Number.parseInt(event)
+          ].height
+        ) {
+          setCurrentWarrenpoint({
+            ...currentWarrenpoint,
+            height: _currentWarrenpointHeight,
+            tideState: "flood",
+          });
+        } else {
+          setCurrentWarrenpoint({
+            ...currentWarrenpoint,
+            height: _currentWarrenpointHeight,
+            tideState: "ebb",
+          });
+        }
+        break;
+      }
+    }
 
     console.log("heyshamTideData", heyshamTideDataRes.data.data);
     console.log("warrenpointTideData", warrenpointTideDataRes.data.data);
@@ -153,24 +409,44 @@ function App() {
   };
   /* fetching with use effect */
   useEffect(() => {
+    const timezoneLoaded = localStorage.getItem("timezone") ?? 0;
+    setTimezone(timezoneLoaded);
     fetchData();
   }, []);
-  useEffect(()=>{
-    console.log("true display data",displayData)
-    console.log(loaded)
-  },[loaded])
-
+  const setTimezone = (timezone) => {
+    try {
+      setTimezoneValue(Number.parseInt(timezone));
+    } catch (error) {
+      console.error("Error getting time zone. Switched to UTC.");
+      setTimezone("UTC");
+    }
+  }
   const manageData = () => {};
 
   return (
     <div className={styles.container}>
       <div className="h1">Oceanlorry Weather 🌊🚚</div>
+      <div className="h4">
+        All data provided with good faith but without guarantee.
+      </div>
       <div className={styles.dividerStrong}></div>
       {/* tides */}
       {loaded && (
         <>
           <div className="h2 bold">Tides 🏊‍♂️</div>
           <div className="h2">Heysham</div>
+          {/* tide - now */}
+          <div className={styles.tideItem}>
+            <div className="h3">{loaded ? "Now" : "tttt"}</div>
+            <div className="h3">
+              {loaded
+                ? Math.round(100 * currentHeysham.height) / 100 + " m, "
+                : "nnnn"}
+            </div>
+            <div className="h3">
+              {loaded ? currentHeysham.tideState : "nnnn"}
+            </div>
+          </div>
           {/* tide - 0 */}
           <div className={styles.tideItem}>
             <div className="h3">
@@ -220,6 +496,18 @@ function App() {
             </div>
           </div>
           <div className="h2">Warrenpoint</div>
+          {/* tide - now */}
+          <div className={styles.tideItem}>
+            <div className="h3">{loaded ? "Now" : "tttt"}</div>
+            <div className="h3">
+              {loaded
+                ? Math.round(100 * currentWarrenpoint.height) / 100 + " m, "
+                : "nnnn"}
+            </div>
+            <div className="h3">
+              {loaded ? currentWarrenpoint.tideState : "nnnn"}
+            </div>
+          </div>
           {/* tide - 0 */}
           <div className={styles.tideItem}>
             <div className="h3">
@@ -279,41 +567,79 @@ function App() {
           <div className={styles.tideItem}>
             <div className="h3">Average</div>
             <div className="h3">
-                       {loaded ? heyshamWindData.averagewindspeed + " kn" : "tttt"}
+              {loaded ? heyshamWindData.averagewindspeed + " kn" : "tttt"}
             </div>
             <div className="h3">
-              {loaded ? heyshamWindData.winddirection + " deg" : "nnnn"}
+              {loaded
+                ? windDegreesToName(
+                    Number.parseInt(heyshamWindData.winddirection)
+                  )
+                : "nnnn"}
             </div>
           </div>
           <div className={styles.tideItem}>
             <div className="h3">Max</div>
             <div className="h3">
-                       {loaded ? heyshamWindData.highwindspeed + " kn" : "tttt"}
+              {loaded ? heyshamWindData.highwindspeed + " kn" : "tttt"}
             </div>
             <div className="h3">
-              {loaded ? heyshamWindData.winddirection + " deg" : "nnnn"}
+              {loaded
+                ? windDegreesToName(
+                    Number.parseInt(heyshamWindData.winddirection)
+                  )
+                : "nnnn"}
             </div>
           </div>
           <div className="h2">Warrenpoint</div>
           <div className={styles.tideItem}>
             <div className="h3">Average</div>
             <div className="h3">
-                       {loaded ? warrenpointWindData.averagewindspeed + " kn" : "tttt"}
+              {loaded ? warrenpointWindData.averagewindspeed + " kn" : "tttt"}
             </div>
             <div className="h3">
-              {loaded ? warrenpointWindData.winddirection + " deg" : "nnnn"}
+              {loaded
+                ? windDegreesToName(
+                    Number.parseInt(warrenpointWindData.winddirection)
+                  )
+                : "nnnn"}
             </div>
           </div>
           <div className={styles.tideItem}>
             <div className="h3">Max</div>
             <div className="h3">
-                       {loaded ? warrenpointWindData.highwindspeed + " kn" : "tttt"}
+              {loaded ? warrenpointWindData.highwindspeed + " kn" : "tttt"}
             </div>
             <div className="h3">
-              {loaded ? warrenpointWindData.winddirection + " deg" : "nnnn"}
+              {loaded
+                ? windDegreesToName(
+                    Number.parseInt(warrenpointWindData.winddirection)
+                  )
+                : "nnnn"}
             </div>
           </div>
+          <div className={styles.divider}></div>
+          {/* settings section */}
+          <div className="h2 bold">Settings</div>
+          {/* choose time zone */}
+          <div className="h2">Time zone</div>
+          <div className={styles.tideItem}>
+            <select
+              onChange={(e) => {
+                setTimezone(e.target.value);
+              }}
+            >
+              <option value="UTC">UTC</option>
+              <option value="en-GB">BST</option>
+            </select>
+          </div>
+          <div className={styles.divider}></div>
+          <div className="h4">2022, all rights reserved.</div>
         </>
+      )}
+      {!loaded && (
+        <div className={styles.loading}>
+          <LoadingScreen />
+        </div>
       )}
     </div>
   );
