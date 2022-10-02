@@ -4,6 +4,7 @@ import "./App.css";
 import styles from "./styles/Home.module.css";
 
 function App() {
+  const [liverpoolTideData, setLiverpoolTideData] = useState({});
   const [heyshamTideData, setHeyshamTideData] = useState({});
   const [warrenpointTideData, setWarrenpointTideData] = useState({});
   const [heyshamWindData, setHeyshamWindData] = useState({});
@@ -19,7 +20,9 @@ function App() {
     /* warrenpoint */
     const warrenpointTideDataRes = await axios.get(
       "/.netlify/functions/warrenpoint"
-    );
+      );
+      /* liverpool */
+      const liverpoolTideDataRes = await axios.get("/.netlify/functions/liverpool");
     /* weather */
     const warrenpointWindRes = await axios.get(
       "/.netlify/functions/stwWarrenpoint"
