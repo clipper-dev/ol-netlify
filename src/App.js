@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./App.css";
 import LoadingScreen from "./components/LoadingScreen";
 import styles from "./styles/Home.module.css";
@@ -16,8 +16,11 @@ function App() {
   const [warrenpointWindData, setWarrenpointWindData] = useState({});
   const [loaded, setLoaded] = useState(false);
 
+
   const [displayData, setDisplayData] = useState({});
   const [currentHeysham, setCurrentHeysham] = useState({});
+  const [tidalCurrentHeyshamNow, setTidalCurrentHeyshamNow] = useState(0);
+  
   const [currentWarrenpoint, setCurrentWarrenpoint] = useState({});
   /* fetch data */
   const fetchData = async () => {
@@ -27,6 +30,10 @@ function App() {
     /* warrenpoint */
     const warrenpointTideDataRes = await axios.get(
       "/.netlify/functions/warrenpoint"
+    );
+    /* liverpool */
+    const liverpoolTideDataRes = await axios.get(
+      "/.netlify/functions/liverpool"
     );
     /* weather */
     const warrenpointWindRes = await axios.get(
@@ -46,38 +53,59 @@ function App() {
     const currentDate = new Date();
     console.log(currentDate);
     let _displayData;
+
+    const timezoneLoaded = localStorage.getItem("timezone") ?? "UTC";
     for (const event in heyshamTideDataRes.data.data.tidalEventList) {
       const _date = heyshamTideDataRes.data.data.tidalEventList[event].dateTime;
       /* compare currentDate and _date and check which is later */
       const _dateObj = new Date(_date);
       if (_dateObj > currentDate) {
         //first major event that will happen
-        const _date1 = heyshamTideDataRes.data.data.tidalEventList[Number.parseInt(event)].dateTime;
-        const _date2 = heyshamTideDataRes.data.data.tidalEventList[Number.parseInt(event)+1].dateTime;
-        const _date3 = heyshamTideDataRes.data.data.tidalEventList[Number.parseInt(event)+2].dateTime;
-        const _date4 = heyshamTideDataRes.data.data.tidalEventList[Number.parseInt(event)+3].dateTime;
+        const _date1 =
+          heyshamTideDataRes.data.data.tidalEventList[Number.parseInt(event)]
+            .dateTime;
+        const _date2 =
+          heyshamTideDataRes.data.data.tidalEventList[
+            Number.parseInt(event) + 1
+          ].dateTime;
+        const _date3 =
+          heyshamTideDataRes.data.data.tidalEventList[
+            Number.parseInt(event) + 2
+          ].dateTime;
+        const _date4 =
+          heyshamTideDataRes.data.data.tidalEventList[
+            Number.parseInt(event) + 3
+          ].dateTime;
         let _dateObj1;
         let _dateObj2;
         let _dateObj3;
         let _dateObj4;
-        if(timezoneValue==="UTC"){
+        if (timezoneLoaded === "UTC") {
           _dateObj1 = new Date(_date1);
           _dateObj2 = new Date(_date2);
           _dateObj3 = new Date(_date3);
           _dateObj4 = new Date(_date4);
         }
-        if(timezoneValue==="en-GB"){
-          _dateObj1 = new Date(_date1).toLocaleString("en-GB");
-          _dateObj2 = new Date(_date2).toLocaleString("en-GB");
-          _dateObj3 = new Date(_date3).toLocaleString("en-GB");
-          _dateObj4 = new Date(_date4).toLocaleString("en-GB");
+        if (timezoneLoaded === "en-GB") {
+          _dateObj1 = new Date(new Date(_date1).getTime() + 3600000);
+          _dateObj2 = new Date(new Date(_date2).getTime() + 3600000);
+          _dateObj3 = new Date(new Date(_date3).getTime() + 3600000);
+          _dateObj4 = new Date(new Date(_date4).getTime() + 3600000);
         }
         _displayData = {
           ...displayData,
           heyshamTides: [
             {
               time:
-                _dateObj1,
+                _dateObj1.getFullYear() +
+                "-" +
+                (_dateObj1.getDate()>9 ?  _dateObj1.getDate() :  "0"+_dateObj1.getDate() ) +
+                "-" +
+                (_dateObj1.getMonth() + 1) +
+                " " +
+                (_dateObj1.getHours()>9 ?  _dateObj1.getHours() :  "0"+_dateObj1.getHours() ) +
+                "" +
+                (_dateObj1.getMinutes()>9 ?  _dateObj1.getMinutes() :  "0"+_dateObj1.getMinutes() ),
               height:
                 heyshamTideDataRes.data.data.tidalEventList[
                   Number.parseInt(event)
@@ -85,20 +113,16 @@ function App() {
             },
             {
               time:
-                heyshamTideDataRes.data.data.tidalEventList[
-                  Number.parseInt(event) + 1
-                ].dateTime.split("T")[0] +
+                _dateObj2.getFullYear() +
+                "-" +
+                (_dateObj2.getDate()>9 ?  _dateObj2.getDate() :  "0"+_dateObj2.getDate() ) +
+                "-" +
+                (_dateObj2.getMonth()>8 ? ( _dateObj2.getMonth()+1) :  "0"+(_dateObj2.getMonth()+1) ) +
                 " " +
-                heyshamTideDataRes.data.data.tidalEventList[
-                  Number.parseInt(event) + 1
-                ].dateTime
-                  .split("T")[1]
-                  .split(":")[0] +
-                heyshamTideDataRes.data.data.tidalEventList[
-                  Number.parseInt(event) + 1
-                ].dateTime
-                  .split("T")[1]
-                  .split(":")[1],
+                (_dateObj2.getHours()>9 ?  _dateObj2.getHours() :  "0"+_dateObj2.getHours() ) +
+                "" +
+                (_dateObj2.getMinutes()>9 ?  _dateObj2.getMinutes() :  "0"+_dateObj2.getMinutes() ),
+
               height:
                 heyshamTideDataRes.data.data.tidalEventList[
                   Number.parseInt(event) + 1
@@ -106,20 +130,15 @@ function App() {
             },
             {
               time:
-                heyshamTideDataRes.data.data.tidalEventList[
-                  Number.parseInt(event) + 2
-                ].dateTime.split("T")[0] +
+                _dateObj3.getFullYear() +
+                "-" +
+                (_dateObj3.getDate()>9 ?  _dateObj3.getDate() :  "0"+_dateObj3.getDate() ) +
+                "-" +
+                (_dateObj3.getMonth()>8 ? ( _dateObj3.getMonth()+1) :  "0"+(_dateObj3.getMonth()+1) ) +
                 " " +
-                heyshamTideDataRes.data.data.tidalEventList[
-                  Number.parseInt(event) + 2
-                ].dateTime
-                  .split("T")[1]
-                  .split(":")[0] +
-                heyshamTideDataRes.data.data.tidalEventList[
-                  Number.parseInt(event) + 2
-                ].dateTime
-                  .split("T")[1]
-                  .split(":")[1],
+                (_dateObj3.getHours()>9 ?  _dateObj3.getHours() :  "0"+_dateObj3.getHours() ) +
+                "" +
+                (_dateObj3.getMinutes()>9 ?  _dateObj3.getMinutes() :  "0"+_dateObj3.getMinutes() ),
               height:
                 heyshamTideDataRes.data.data.tidalEventList[
                   Number.parseInt(event) + 2
@@ -127,20 +146,15 @@ function App() {
             },
             {
               time:
-                heyshamTideDataRes.data.data.tidalEventList[
-                  Number.parseInt(event) + 3
-                ].dateTime.split("T")[0] +
+                _dateObj4.getFullYear() +
+                "-" +
+                (_dateObj4.getDate()>9 ?  _dateObj4.getDate() :  "0"+_dateObj4.getDate() ) +
+                "-" +
+                (_dateObj4.getMonth()>8 ? ( _dateObj4.getMonth()+1) :  "0"+(_dateObj4.getMonth()+1) ) +
                 " " +
-                heyshamTideDataRes.data.data.tidalEventList[
-                  Number.parseInt(event) + 3
-                ].dateTime
-                  .split("T")[1]
-                  .split(":")[0] +
-                heyshamTideDataRes.data.data.tidalEventList[
-                  Number.parseInt(event) + 3
-                ].dateTime
-                  .split("T")[1]
-                  .split(":")[1],
+                (_dateObj4.getHours()>9 ?  _dateObj4.getHours() :  "0"+_dateObj4.getHours() ) +
+                "" +
+                (_dateObj4.getMinutes()>9 ?  _dateObj4.getMinutes() :  "0"+_dateObj4.getMinutes() ),
               height:
                 heyshamTideDataRes.data.data.tidalEventList[
                   Number.parseInt(event) + 3
@@ -154,32 +168,58 @@ function App() {
         break;
       }
     }
+    
     for (const event in warrenpointTideDataRes.data.data.tidalEventList) {
-      const _date =
-        warrenpointTideDataRes.data.data.tidalEventList[event].dateTime;
+      const _date = warrenpointTideDataRes.data.data.tidalEventList[event].dateTime;
       /* compare currentDate and _date and check which is later */
       const _dateObj = new Date(_date);
       if (_dateObj > currentDate) {
+      const _date1 =
+      warrenpointTideDataRes.data.data.tidalEventList[Number.parseInt(event)]
+            .dateTime;
+        const _date2 =
+        warrenpointTideDataRes.data.data.tidalEventList[
+            Number.parseInt(event) + 1
+          ].dateTime;
+        const _date3 =
+        warrenpointTideDataRes.data.data.tidalEventList[
+            Number.parseInt(event) + 2
+          ].dateTime;
+        const _date4 =
+        warrenpointTideDataRes.data.data.tidalEventList[
+            Number.parseInt(event) + 3
+          ].dateTime;
+        let _dateObj1;
+        let _dateObj2;
+        let _dateObj3;
+        let _dateObj4;
+        if (timezoneLoaded === "UTC") {
+          _dateObj1 = new Date(_date1);
+          _dateObj2 = new Date(_date2);
+          _dateObj3 = new Date(_date3);
+          _dateObj4 = new Date(_date4);
+        }
+        if (timezoneLoaded === "en-GB") {
+          _dateObj1 = new Date(new Date(_date1).getTime() + 3600000);
+          _dateObj2 = new Date(new Date(_date2).getTime() + 3600000);
+          _dateObj3 = new Date(new Date(_date3).getTime() + 3600000);
+          _dateObj4 = new Date(new Date(_date4).getTime() + 3600000);
+        }
         //first major event that will happen
         setDisplayData({
           ..._displayData,
           warrenpointTides: [
             {
               time:
-                warrenpointTideDataRes.data.data.tidalEventList[
-                  Number.parseInt(event)
-                ].dateTime.split("T")[0] +
+                _dateObj1.getFullYear() +
+                "-"+
+                (_dateObj1.getDate()>9 ?  _dateObj1.getDate() :  "0"+_dateObj1.getDate() ) +
+                "-" +
+                (_dateObj1.getMonth()>8 ? ( _dateObj1.getMonth()+1) :  "0"+(_dateObj1.getMonth()+1) ) +
                 " " +
-                warrenpointTideDataRes.data.data.tidalEventList[
-                  Number.parseInt(event)
-                ].dateTime
-                  .split("T")[1]
-                  .split(":")[0] +
-                warrenpointTideDataRes.data.data.tidalEventList[
-                  Number.parseInt(event)
-                ].dateTime
-                  .split("T")[1]
-                  .split(":")[1],
+                (_dateObj1.getHours()>9 ?  _dateObj1.getHours() :  "0"+_dateObj1.getHours() ) +
+                "" +
+                (_dateObj1.getMinutes()>9 ?  _dateObj1.getMinutes() :  "0"+_dateObj1.getMinutes() ),
               height:
                 warrenpointTideDataRes.data.data.tidalEventList[
                   Number.parseInt(event)
@@ -187,20 +227,15 @@ function App() {
             },
             {
               time:
-                warrenpointTideDataRes.data.data.tidalEventList[
-                  Number.parseInt(event) + 1
-                ].dateTime.split("T")[0] +
+                _dateObj2.getFullYear() +
+                "-" +
+                (_dateObj2.getDate()>9 ?  _dateObj2.getDate() :  "0"+_dateObj2.getDate() ) +
+                "-" +
+                (_dateObj2.getMonth()>8 ? ( _dateObj2.getMonth()+1) :  "0"+(_dateObj2.getMonth()+1) ) +
                 " " +
-                warrenpointTideDataRes.data.data.tidalEventList[
-                  Number.parseInt(event) + 1
-                ].dateTime
-                  .split("T")[1]
-                  .split(":")[0] +
-                warrenpointTideDataRes.data.data.tidalEventList[
-                  Number.parseInt(event) + 1
-                ].dateTime
-                  .split("T")[1]
-                  .split(":")[1],
+                (_dateObj2.getHours()>9 ?  _dateObj2.getHours() :  "0"+_dateObj2.getHours() ) +
+                "" +
+                (_dateObj2.getMinutes()>9 ?  _dateObj2.getMinutes() :  "0"+_dateObj2.getMinutes() ),
               height:
                 warrenpointTideDataRes.data.data.tidalEventList[
                   Number.parseInt(event) + 1
@@ -208,20 +243,15 @@ function App() {
             },
             {
               time:
-                warrenpointTideDataRes.data.data.tidalEventList[
-                  Number.parseInt(event) + 2
-                ].dateTime.split("T")[0] +
+                _dateObj3.getFullYear() +
+                "-" +
+                (_dateObj3.getDate()>9 ?  _dateObj3.getDate() :  "0"+_dateObj3.getDate() ) +
+                "-" +
+                (_dateObj3.getMonth()>8 ? ( _dateObj3.getMonth()+1) :  "0"+(_dateObj3.getMonth()+1) ) +
                 " " +
-                warrenpointTideDataRes.data.data.tidalEventList[
-                  Number.parseInt(event) + 2
-                ].dateTime
-                  .split("T")[1]
-                  .split(":")[0] +
-                warrenpointTideDataRes.data.data.tidalEventList[
-                  Number.parseInt(event) + 2
-                ].dateTime
-                  .split("T")[1]
-                  .split(":")[1],
+                (_dateObj3.getHours()>9 ?  _dateObj3.getHours() :  "0"+_dateObj3.getHours() ) +
+                "" +
+                (_dateObj3.getMinutes()>9 ?  _dateObj3.getMinutes() :  "0"+_dateObj3.getMinutes() ),
               height:
                 warrenpointTideDataRes.data.data.tidalEventList[
                   Number.parseInt(event) + 2
@@ -229,20 +259,15 @@ function App() {
             },
             {
               time:
-                warrenpointTideDataRes.data.data.tidalEventList[
-                  Number.parseInt(event) + 3
-                ].dateTime.split("T")[0] +
+                _dateObj4.getFullYear() +
+                "-" +
+                (_dateObj4.getDate()>9 ?  _dateObj4.getDate() :  "0"+_dateObj4.getDate() ) +
+                "-" +
+                (_dateObj3.getMonth()>8 ? ( _dateObj3.getMonth()+1) :  "0"+(_dateObj4.getMonth()+1) ) +
                 " " +
-                warrenpointTideDataRes.data.data.tidalEventList[
-                  Number.parseInt(event) + 3
-                ].dateTime
-                  .split("T")[1]
-                  .split(":")[0] +
-                warrenpointTideDataRes.data.data.tidalEventList[
-                  Number.parseInt(event) + 3
-                ].dateTime
-                  .split("T")[1]
-                  .split(":")[1],
+                (_dateObj4.getHours()>9 ?  _dateObj4.getHours() :  "0"+_dateObj4.getHours() ) +
+                "" +
+                (_dateObj4.getMinutes()>9 ?  _dateObj4.getMinutes() :  "0"+_dateObj4.getMinutes() ),
               height:
                 warrenpointTideDataRes.data.data.tidalEventList[
                   Number.parseInt(event) + 3
@@ -402,26 +427,60 @@ function App() {
       }
     }
 
+    /* checking the closes high water in liverpool and calculating the tidal current in heysham */
+    for (const event in liverpoolTideDataRes.data.data
+      .tidalHeightOccurrenceList) {
+      const _date =
+      liverpoolTideDataRes.data.data.tidalHeightOccurrenceList[event].dateTime;
+
+      /* compare currentDate and _date and check which is later */
+      const _dateObj = new Date(_date);
+      if (_dateObj > currentDate) {
+        const tideBefore = Number.parseFloat(
+          warrenpointTideDataRes.data.data.tidalHeightOccurrenceList[
+            Number.parseInt(event) - 1
+          ].height
+        );
+        const tideAfter = Number.parseFloat(
+          warrenpointTideDataRes.data.data.tidalHeightOccurrenceList[
+            Number.parseInt(event)
+          ].height
+        );
+        if (tideAfter - tideBefore > 0){
+          /* tide after is the closer high water */
+          
+        }
+        setTidalCurrentHeyshamNow(1);
+        break;
+      }
+    }
+
+
     console.log("heyshamTideData", heyshamTideDataRes.data.data);
     console.log("warrenpointTideData", warrenpointTideDataRes.data.data);
     console.log("heyshamWind", heyshamWindRes.data.data);
     console.log("warrenpointWind", warrenpointWindRes.data.data);
   };
+  /* refs */
+  const timezoneSelect = useRef(null);
   /* fetching with use effect */
   useEffect(() => {
     const timezoneLoaded = localStorage.getItem("timezone") ?? 0;
     setTimezone(timezoneLoaded);
     fetchData();
   }, []);
+  /* set timezone */
+
   const setTimezone = (timezone) => {
     try {
-      setTimezoneValue(Number.parseInt(timezone));
+      setTimezoneValue(timezone);
+      localStorage.setItem("timezone", timezone);
+      console.log("Setting the timezone to " + timezone);
     } catch (error) {
       console.error("Error getting time zone. Switched to UTC.");
       setTimezone("UTC");
     }
-  }
-  const manageData = () => {};
+  };
 
   return (
     <div className={styles.container}>
@@ -618,16 +677,35 @@ function App() {
             </div>
           </div>
           <div className={styles.divider}></div>
-          {/* settings section */}
-          <div className="h2 bold">Settings</div>
+          
+          
+          {/* currents section */}
+          <div className="h2 bold">Current 💦</div>
           {/* choose time zone */}
-          <div className="h2">Time zone</div>
+          <div className="h2">Heysham</div>
           <div className={styles.tideItem}>
+            <div className="h3">Now</div>
+            <div className="h3">
+              {loaded ? tidalCurrentHeyshamNow + " kn" : "Nan kn"}
+            </div>
+          </div>
+          <div className={styles.divider}></div>
+
+
+          {/* settings section */}
+          <div className="h2 bold">Settings ⚙</div>
+          {/* choose time zone */}
+          <div className="h2">Time zone: {timezoneValue==="en-GB" ? "UTC+1" : "UTC"}</div>
+          <div className={styles.tideItem}>
+          <span>Change timezone: </span>
             <select
               onChange={(e) => {
                 setTimezone(e.target.value);
               }}
+              ref={timezoneSelect}
+              id="timezoneSelectID"
             >
+              <option value=""></option>
               <option value="UTC">UTC</option>
               <option value="en-GB">BST</option>
             </select>
