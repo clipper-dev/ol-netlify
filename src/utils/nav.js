@@ -85,8 +85,8 @@ export const windDegreesToName = (windDegrees) => {
 };
 
 export const heyshamTidalCurrent = (timeToHighWater, height) => {
-  const GLADSTONE_SPRING = 10;
-  const GLADSTONE_NEAP = 5;
+  const GLADSTONE_SPRING = 8.4;
+  const GLADSTONE_NEAP = 4.4;
   let springRate = 0;
   let neapRate = 0;
   /* getting the time in relation to high water */
@@ -110,33 +110,33 @@ export const heyshamTidalCurrent = (timeToHighWater, height) => {
   } else if (timeToHighWater > 5) {
     return [0.1, "flooding"];
   } else if (timeToHighWater > 4) {
-    const current = currentm5 + (currentm4 - currentm5) * (timeToHighWater - 4);
+    const current = currentm5 + (currentm4 - currentm5) * (5 - timeToHighWater);
     return [current, "flooding"];
   } else if (timeToHighWater > 3) {
-    const current = currentm4 + (currentm3 - currentm4) * (timeToHighWater - 3);
+    const current = currentm4 + (currentm3 - currentm4) * (4 - timeToHighWater);
     return [current, "flooding"];
   } else if (timeToHighWater > 2) {
-    const current = currentm3 + (currentm2 - currentm3) * (timeToHighWater - 2);
+    const current = currentm3 + (currentm2 - currentm3) * (3 - timeToHighWater);
     return [current, "flooding"];
   } else if (timeToHighWater > 1) {
-    const current = currentm2 + (currentm1 - currentm2) * (timeToHighWater - 1);
+    const current = currentm2 + (currentm1 - currentm2) * (2 - timeToHighWater);
     return [current, "flooding"];
   }
   /* high water */
   else if (timeToHighWater > 0) {
-    const current = currentm1 + (currentHW - currentm1) * timeToHighWater;
+    const current = currentm1 + (currentHW - currentm1) * (1 - timeToHighWater);
     return [current, "flooding"];
   } else if (timeToHighWater > -1) {
-    const current = currentHW + (currentp1 - currentHW) * -timeToHighWater;
+    const current = currentHW + (currentp1 - currentHW) * ( timeToHighWater);
     return [current, "ebbing"];
   } else if (timeToHighWater > -2) {
-    const current = currentp1 + (currentp2 - currentp1) * -(timeToHighWater + 1);
+    const current = currentp1 + (currentp2 - currentp1) * (1 + timeToHighWater);
     return [current, "ebbing"];
   } else if (timeToHighWater > -3) {
-    const current = currentp2 + (currentp3 - currentp2) * -(timeToHighWater + 2);
+    const current = currentp2 + (currentp3 - currentp2) * (2+ timeToHighWater);
     return [current, "ebbing"];
   } else if (timeToHighWater > -4) {
-    const current = currentp3 + (currentp4 - currentp3) * -(timeToHighWater + 3);
+    const current = currentp3 + (currentp4 - currentp3) * (3 + timeToHighWater);
     return [current, "ebbing"];
   } else if (timeToHighWater > -5) {
     return [0.1, "ebbing"];

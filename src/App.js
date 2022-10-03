@@ -4,7 +4,7 @@ import "./App.css";
 import LoadingScreen from "./components/LoadingScreen";
 import styles from "./styles/Home.module.css";
 /* nav functions */
-import { windDegreesToName } from "./utils/nav";
+import { heyshamTidalCurrent, windDegreesToName } from "./utils/nav";
 
 function App() {
   /* app settings */
@@ -16,11 +16,10 @@ function App() {
   const [warrenpointWindData, setWarrenpointWindData] = useState({});
   const [loaded, setLoaded] = useState(false);
 
-
   const [displayData, setDisplayData] = useState({});
   const [currentHeysham, setCurrentHeysham] = useState({});
-  const [tidalCurrentHeyshamNow, setTidalCurrentHeyshamNow] = useState(0);
-  
+  const [tidalCurrentHeyshamNow, setTidalCurrentHeyshamNow] = useState({});
+
   const [currentWarrenpoint, setCurrentWarrenpoint] = useState({});
   /* fetch data */
   const fetchData = async () => {
@@ -99,13 +98,19 @@ function App() {
               time:
                 _dateObj1.getFullYear() +
                 "-" +
-                (_dateObj1.getDate()>9 ?  _dateObj1.getDate() :  "0"+_dateObj1.getDate() ) +
+                (_dateObj1.getDate() > 9
+                  ? _dateObj1.getDate()
+                  : "0" + _dateObj1.getDate()) +
                 "-" +
                 (_dateObj1.getMonth() + 1) +
                 " " +
-                (_dateObj1.getHours()>9 ?  _dateObj1.getHours() :  "0"+_dateObj1.getHours() ) +
+                (_dateObj1.getHours() > 9
+                  ? _dateObj1.getHours()
+                  : "0" + _dateObj1.getHours()) +
                 "" +
-                (_dateObj1.getMinutes()>9 ?  _dateObj1.getMinutes() :  "0"+_dateObj1.getMinutes() ),
+                (_dateObj1.getMinutes() > 9
+                  ? _dateObj1.getMinutes()
+                  : "0" + _dateObj1.getMinutes()),
               height:
                 heyshamTideDataRes.data.data.tidalEventList[
                   Number.parseInt(event)
@@ -115,13 +120,21 @@ function App() {
               time:
                 _dateObj2.getFullYear() +
                 "-" +
-                (_dateObj2.getDate()>9 ?  _dateObj2.getDate() :  "0"+_dateObj2.getDate() ) +
+                (_dateObj2.getDate() > 9
+                  ? _dateObj2.getDate()
+                  : "0" + _dateObj2.getDate()) +
                 "-" +
-                (_dateObj2.getMonth()>8 ? ( _dateObj2.getMonth()+1) :  "0"+(_dateObj2.getMonth()+1) ) +
+                (_dateObj2.getMonth() > 8
+                  ? _dateObj2.getMonth() + 1
+                  : "0" + (_dateObj2.getMonth() + 1)) +
                 " " +
-                (_dateObj2.getHours()>9 ?  _dateObj2.getHours() :  "0"+_dateObj2.getHours() ) +
+                (_dateObj2.getHours() > 9
+                  ? _dateObj2.getHours()
+                  : "0" + _dateObj2.getHours()) +
                 "" +
-                (_dateObj2.getMinutes()>9 ?  _dateObj2.getMinutes() :  "0"+_dateObj2.getMinutes() ),
+                (_dateObj2.getMinutes() > 9
+                  ? _dateObj2.getMinutes()
+                  : "0" + _dateObj2.getMinutes()),
 
               height:
                 heyshamTideDataRes.data.data.tidalEventList[
@@ -132,13 +145,21 @@ function App() {
               time:
                 _dateObj3.getFullYear() +
                 "-" +
-                (_dateObj3.getDate()>9 ?  _dateObj3.getDate() :  "0"+_dateObj3.getDate() ) +
+                (_dateObj3.getDate() > 9
+                  ? _dateObj3.getDate()
+                  : "0" + _dateObj3.getDate()) +
                 "-" +
-                (_dateObj3.getMonth()>8 ? ( _dateObj3.getMonth()+1) :  "0"+(_dateObj3.getMonth()+1) ) +
+                (_dateObj3.getMonth() > 8
+                  ? _dateObj3.getMonth() + 1
+                  : "0" + (_dateObj3.getMonth() + 1)) +
                 " " +
-                (_dateObj3.getHours()>9 ?  _dateObj3.getHours() :  "0"+_dateObj3.getHours() ) +
+                (_dateObj3.getHours() > 9
+                  ? _dateObj3.getHours()
+                  : "0" + _dateObj3.getHours()) +
                 "" +
-                (_dateObj3.getMinutes()>9 ?  _dateObj3.getMinutes() :  "0"+_dateObj3.getMinutes() ),
+                (_dateObj3.getMinutes() > 9
+                  ? _dateObj3.getMinutes()
+                  : "0" + _dateObj3.getMinutes()),
               height:
                 heyshamTideDataRes.data.data.tidalEventList[
                   Number.parseInt(event) + 2
@@ -148,13 +169,21 @@ function App() {
               time:
                 _dateObj4.getFullYear() +
                 "-" +
-                (_dateObj4.getDate()>9 ?  _dateObj4.getDate() :  "0"+_dateObj4.getDate() ) +
+                (_dateObj4.getDate() > 9
+                  ? _dateObj4.getDate()
+                  : "0" + _dateObj4.getDate()) +
                 "-" +
-                (_dateObj4.getMonth()>8 ? ( _dateObj4.getMonth()+1) :  "0"+(_dateObj4.getMonth()+1) ) +
+                (_dateObj4.getMonth() > 8
+                  ? _dateObj4.getMonth() + 1
+                  : "0" + (_dateObj4.getMonth() + 1)) +
                 " " +
-                (_dateObj4.getHours()>9 ?  _dateObj4.getHours() :  "0"+_dateObj4.getHours() ) +
+                (_dateObj4.getHours() > 9
+                  ? _dateObj4.getHours()
+                  : "0" + _dateObj4.getHours()) +
                 "" +
-                (_dateObj4.getMinutes()>9 ?  _dateObj4.getMinutes() :  "0"+_dateObj4.getMinutes() ),
+                (_dateObj4.getMinutes() > 9
+                  ? _dateObj4.getMinutes()
+                  : "0" + _dateObj4.getMinutes()),
               height:
                 heyshamTideDataRes.data.data.tidalEventList[
                   Number.parseInt(event) + 3
@@ -168,25 +197,27 @@ function App() {
         break;
       }
     }
-    
+
     for (const event in warrenpointTideDataRes.data.data.tidalEventList) {
-      const _date = warrenpointTideDataRes.data.data.tidalEventList[event].dateTime;
+      const _date =
+        warrenpointTideDataRes.data.data.tidalEventList[event].dateTime;
       /* compare currentDate and _date and check which is later */
       const _dateObj = new Date(_date);
       if (_dateObj > currentDate) {
-      const _date1 =
-      warrenpointTideDataRes.data.data.tidalEventList[Number.parseInt(event)]
-            .dateTime;
+        const _date1 =
+          warrenpointTideDataRes.data.data.tidalEventList[
+            Number.parseInt(event)
+          ].dateTime;
         const _date2 =
-        warrenpointTideDataRes.data.data.tidalEventList[
+          warrenpointTideDataRes.data.data.tidalEventList[
             Number.parseInt(event) + 1
           ].dateTime;
         const _date3 =
-        warrenpointTideDataRes.data.data.tidalEventList[
+          warrenpointTideDataRes.data.data.tidalEventList[
             Number.parseInt(event) + 2
           ].dateTime;
         const _date4 =
-        warrenpointTideDataRes.data.data.tidalEventList[
+          warrenpointTideDataRes.data.data.tidalEventList[
             Number.parseInt(event) + 3
           ].dateTime;
         let _dateObj1;
@@ -212,14 +243,22 @@ function App() {
             {
               time:
                 _dateObj1.getFullYear() +
-                "-"+
-                (_dateObj1.getDate()>9 ?  _dateObj1.getDate() :  "0"+_dateObj1.getDate() ) +
                 "-" +
-                (_dateObj1.getMonth()>8 ? ( _dateObj1.getMonth()+1) :  "0"+(_dateObj1.getMonth()+1) ) +
+                (_dateObj1.getDate() > 9
+                  ? _dateObj1.getDate()
+                  : "0" + _dateObj1.getDate()) +
+                "-" +
+                (_dateObj1.getMonth() > 8
+                  ? _dateObj1.getMonth() + 1
+                  : "0" + (_dateObj1.getMonth() + 1)) +
                 " " +
-                (_dateObj1.getHours()>9 ?  _dateObj1.getHours() :  "0"+_dateObj1.getHours() ) +
+                (_dateObj1.getHours() > 9
+                  ? _dateObj1.getHours()
+                  : "0" + _dateObj1.getHours()) +
                 "" +
-                (_dateObj1.getMinutes()>9 ?  _dateObj1.getMinutes() :  "0"+_dateObj1.getMinutes() ),
+                (_dateObj1.getMinutes() > 9
+                  ? _dateObj1.getMinutes()
+                  : "0" + _dateObj1.getMinutes()),
               height:
                 warrenpointTideDataRes.data.data.tidalEventList[
                   Number.parseInt(event)
@@ -229,13 +268,21 @@ function App() {
               time:
                 _dateObj2.getFullYear() +
                 "-" +
-                (_dateObj2.getDate()>9 ?  _dateObj2.getDate() :  "0"+_dateObj2.getDate() ) +
+                (_dateObj2.getDate() > 9
+                  ? _dateObj2.getDate()
+                  : "0" + _dateObj2.getDate()) +
                 "-" +
-                (_dateObj2.getMonth()>8 ? ( _dateObj2.getMonth()+1) :  "0"+(_dateObj2.getMonth()+1) ) +
+                (_dateObj2.getMonth() > 8
+                  ? _dateObj2.getMonth() + 1
+                  : "0" + (_dateObj2.getMonth() + 1)) +
                 " " +
-                (_dateObj2.getHours()>9 ?  _dateObj2.getHours() :  "0"+_dateObj2.getHours() ) +
+                (_dateObj2.getHours() > 9
+                  ? _dateObj2.getHours()
+                  : "0" + _dateObj2.getHours()) +
                 "" +
-                (_dateObj2.getMinutes()>9 ?  _dateObj2.getMinutes() :  "0"+_dateObj2.getMinutes() ),
+                (_dateObj2.getMinutes() > 9
+                  ? _dateObj2.getMinutes()
+                  : "0" + _dateObj2.getMinutes()),
               height:
                 warrenpointTideDataRes.data.data.tidalEventList[
                   Number.parseInt(event) + 1
@@ -245,13 +292,21 @@ function App() {
               time:
                 _dateObj3.getFullYear() +
                 "-" +
-                (_dateObj3.getDate()>9 ?  _dateObj3.getDate() :  "0"+_dateObj3.getDate() ) +
+                (_dateObj3.getDate() > 9
+                  ? _dateObj3.getDate()
+                  : "0" + _dateObj3.getDate()) +
                 "-" +
-                (_dateObj3.getMonth()>8 ? ( _dateObj3.getMonth()+1) :  "0"+(_dateObj3.getMonth()+1) ) +
+                (_dateObj3.getMonth() > 8
+                  ? _dateObj3.getMonth() + 1
+                  : "0" + (_dateObj3.getMonth() + 1)) +
                 " " +
-                (_dateObj3.getHours()>9 ?  _dateObj3.getHours() :  "0"+_dateObj3.getHours() ) +
+                (_dateObj3.getHours() > 9
+                  ? _dateObj3.getHours()
+                  : "0" + _dateObj3.getHours()) +
                 "" +
-                (_dateObj3.getMinutes()>9 ?  _dateObj3.getMinutes() :  "0"+_dateObj3.getMinutes() ),
+                (_dateObj3.getMinutes() > 9
+                  ? _dateObj3.getMinutes()
+                  : "0" + _dateObj3.getMinutes()),
               height:
                 warrenpointTideDataRes.data.data.tidalEventList[
                   Number.parseInt(event) + 2
@@ -261,13 +316,21 @@ function App() {
               time:
                 _dateObj4.getFullYear() +
                 "-" +
-                (_dateObj4.getDate()>9 ?  _dateObj4.getDate() :  "0"+_dateObj4.getDate() ) +
+                (_dateObj4.getDate() > 9
+                  ? _dateObj4.getDate()
+                  : "0" + _dateObj4.getDate()) +
                 "-" +
-                (_dateObj3.getMonth()>8 ? ( _dateObj3.getMonth()+1) :  "0"+(_dateObj4.getMonth()+1) ) +
+                (_dateObj3.getMonth() > 8
+                  ? _dateObj3.getMonth() + 1
+                  : "0" + (_dateObj4.getMonth() + 1)) +
                 " " +
-                (_dateObj4.getHours()>9 ?  _dateObj4.getHours() :  "0"+_dateObj4.getHours() ) +
+                (_dateObj4.getHours() > 9
+                  ? _dateObj4.getHours()
+                  : "0" + _dateObj4.getHours()) +
                 "" +
-                (_dateObj4.getMinutes()>9 ?  _dateObj4.getMinutes() :  "0"+_dateObj4.getMinutes() ),
+                (_dateObj4.getMinutes() > 9
+                  ? _dateObj4.getMinutes()
+                  : "0" + _dateObj4.getMinutes()),
               height:
                 warrenpointTideDataRes.data.data.tidalEventList[
                   Number.parseInt(event) + 3
@@ -363,6 +426,7 @@ function App() {
       /* compare currentDate and _date and check which is later */
       const _dateObj = new Date(_date);
       if (_dateObj > currentDate) {
+        console.log("warrentpoint time", _dateObj)
         /* calculate value for current time by interpolating values from the array */
         const h = 30;
         const x0 = 30;
@@ -428,33 +492,58 @@ function App() {
     }
 
     /* checking the closes high water in liverpool and calculating the tidal current in heysham */
-    for (const event in liverpoolTideDataRes.data.data
-      .tidalHeightOccurrenceList) {
+    for (const event in heyshamTideDataRes.data.data
+      .tidalEventList) {
       const _date =
-      liverpoolTideDataRes.data.data.tidalHeightOccurrenceList[event].dateTime;
+      heyshamTideDataRes.data.data.tidalEventList[event]
+          .dateTime;
 
       /* compare currentDate and _date and check which is later */
-      const _dateObj = new Date(_date);
+      const _tempDate = new Date(_date);
+      const _dateObj = new Date(Date.UTC(_tempDate.getFullYear(), _tempDate.getMonth(), _tempDate.getDate(), _tempDate.getHours(), _tempDate.getMinutes(), _tempDate.getSeconds()));
+      
+      console.log("event temp", _tempDate);
+      console.log("event", _dateObj);
+      console.log("event original", _date);
+      
       if (_dateObj > currentDate) {
         const tideBefore = Number.parseFloat(
-          warrenpointTideDataRes.data.data.tidalHeightOccurrenceList[
+          heyshamTideDataRes.data.data.tidalEventList[
             Number.parseInt(event) - 1
           ].height
         );
         const tideAfter = Number.parseFloat(
-          warrenpointTideDataRes.data.data.tidalHeightOccurrenceList[
+          heyshamTideDataRes.data.data.tidalEventList[
             Number.parseInt(event)
           ].height
         );
-        if (tideAfter - tideBefore > 0){
+        if (tideAfter - tideBefore > 0) {
           /* tide after is the closer high water */
+          const timeDifference = _dateObj - currentDate;
+          const hoursToHW = timeDifference / 3600000;
+          console.log("current time", currentDate);
+          console.log("time difference after", timeDifference);
+          console.log("hoursToHW after", hoursToHW);
+          const [currentHeight, currentDirection]=heyshamTidalCurrent(hoursToHW, tideAfter);
+          setTidalCurrentHeyshamNow({height: currentHeight, direction: currentDirection})
+        } else {
+          const _date2 =
+          liverpoolTideDataRes.data.data.tidalEventList[
+            Number.parseInt(event - 1)
+          ].dateTime;
           
+          /* compare currentDate and _date and check which is later */
+          const _dateObj2 = new Date(_date2);
+          const timeDifference = _dateObj2 - currentDate;
+          const hoursToHW = timeDifference / 3600000;
+          const [currentHeight, currentDirection]=heyshamTidalCurrent(hoursToHW, tideBefore);
+          console.log("time difference before", timeDifference);
+          console.log("hoursToHW before", hoursToHW);
+          setTidalCurrentHeyshamNow({height: currentHeight, direction: currentDirection})
         }
-        setTidalCurrentHeyshamNow(1);
         break;
       }
     }
-
 
     console.log("heyshamTideData", heyshamTideDataRes.data.data);
     console.log("warrenpointTideData", warrenpointTideDataRes.data.data);
@@ -677,8 +766,7 @@ function App() {
             </div>
           </div>
           <div className={styles.divider}></div>
-          
-          
+
           {/* currents section */}
           <div className="h2 bold">Current 💦</div>
           {/* choose time zone */}
@@ -686,18 +774,22 @@ function App() {
           <div className={styles.tideItem}>
             <div className="h3">Now</div>
             <div className="h3">
-              {loaded ? tidalCurrentHeyshamNow + " kn" : "Nan kn"}
+              {loaded ? Math.round(10*tidalCurrentHeyshamNow.height)/10 + " kn" : "Nan kn"}
+            </div>
+            <div className="h3">
+              {loaded ? tidalCurrentHeyshamNow.direction : "Nan"}
             </div>
           </div>
           <div className={styles.divider}></div>
 
-
           {/* settings section */}
           <div className="h2 bold">Settings ⚙</div>
           {/* choose time zone */}
-          <div className="h2">Time zone: {timezoneValue==="en-GB" ? "UTC+1" : "UTC"}</div>
+          <div className="h2">
+            Time zone: {timezoneValue === "en-GB" ? "UTC+1" : "UTC"}
+          </div>
           <div className={styles.tideItem}>
-          <span>Change timezone: </span>
+            <span>Change timezone: </span>
             <select
               onChange={(e) => {
                 setTimezone(e.target.value);
