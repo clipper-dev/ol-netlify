@@ -2,8 +2,8 @@
 	--fontPrimary: #101010;
 }
 .h1 {
-	font-size: 2rem;
-	margin: 1rem;
+	font-size: 1.9rem;
+	margin: .5rem;
 }
 .h2 {
 	font-size: 1.5rem;
@@ -16,6 +16,7 @@
 .h4 {
 	font-size: 1rem;
 	margin: 1rem;
+	text-align: center;
 }
 .bold{
 	font-weight: 800;

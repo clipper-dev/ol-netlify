@@ -84,14 +84,14 @@ export const windDegreesToName = (windDegrees) => {
     return "NNW";
 };
 
-export const heyshamTidalCurrent = (timeToHighWater, height) => {
+export const heyshamTidalCurrent = (timeToHighWater, range) => {
   const GLADSTONE_SPRING = 8.4;
   const GLADSTONE_NEAP = 4.4;
   let springRate = 0;
   let neapRate = 0;
   /* getting the time in relation to high water */
   const heightRatio =
-    (height - GLADSTONE_NEAP) / (GLADSTONE_SPRING - GLADSTONE_NEAP);
+    (range - GLADSTONE_NEAP) / (GLADSTONE_SPRING - GLADSTONE_NEAP);
   const currentm6 = 0;
   const currentm5 = 0.1 + 0.1 * heightRatio;
   const currentm4 = 0.4 + 0.1 * heightRatio;
