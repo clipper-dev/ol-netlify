@@ -1,38 +1,109 @@
 .container {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 .divider {
-	width: 100%;
-	height: 1px;
-	background-color: #eaeaea;
-	margin:  0;
+  width: 100%;
+  height: 1px;
+  background-color: #eaeaea;
+  margin: 1rem 0;
 }
 .dividerStrong {
-	width: 100%;
-	height: 2px;
-	background-color: #c9c9c9;
-	margin:  0;
+  width: 100%;
+  height: 2px;
+  background-color: #c9c9c9;
+  margin: 0;
 }
-.tideItem{
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	justify-content: center;
-	width: 300px;
-	box-shadow: 0px 2px 4px rgba(0,0,0,0.15);
-	border-radius: 5px;
-	margin: .2rem;
+.tideItem {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 300px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15);
+  border-radius: 5px;
+  margin: 0.2rem;
 }
 .loading {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 .loading::after {
-	content: "Loading...";
+  content: "Loading...";
+}
+
+/* toggle */
+.toggle-outer {
+  border-radius: 8px;
+  border: 2px solid darkgrey;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  cursor: pointer;
+}
+.toggle-outer span {
+  margin: 0 0.5rem;
+}
+.toggle-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transition: all 0.1s ease-in-out;
+}
+.handle {
+  content: "";
+  position: absolute;
+  bottom: calc(5% - 2px);
+  width: 50%;
+  height: 90%;
+  background-color: #fafafa;
+  border-radius: 8px;
+  border: 2px solid darkgrey;
+  transition: all 0.1s ease-in-out;
+}
+.handle-left {
+  left: 0;
+}
+.handle-right {
+  left: 50%;
+}
+.toggle-text {
+  flex-grow: 1;
+  padding: 0.2rem;
+  user-select: none;
+}
+
+/* error popup */
+.error-popup {
+  padding: 1.5rem;
+  border: 2px solid grey;
+  border-radius: 8px;
+  background-color: #fafafa;
+  box-shadow: 2px 2px 4px #00000030;
+  position: fixed;
+  bottom: 50px;
+  left: 50px;
+}
+.error-popup-close {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  border-radius: 5px;
+  padding: 0.2rem;
+  border: 1px solid black;
+  background-color: plum;
+  color: #fafafa;
+  cursor: pointer;
+  transition: all 0.1s ease-in-out;
+}
+.error-popup-close:hover {
+  background-color: purple;
+  color: #fafafa;
+}
+.error-popup-text {
+	font-size: 1.2rem;
 }

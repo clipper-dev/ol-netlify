@@ -89,6 +89,7 @@ export const heyshamTidalCurrent = (timeToHighWater, range) => {
   const GLADSTONE_NEAP = 4.4;
   let springRate = 0;
   let neapRate = 0;
+  range = Math.abs(range);
   /* getting the time in relation to high water */
   const heightRatio =
     (range - GLADSTONE_NEAP) / (GLADSTONE_SPRING - GLADSTONE_NEAP);
@@ -105,10 +106,16 @@ export const heyshamTidalCurrent = (timeToHighWater, range) => {
   const currentp4 = 0.9 + 0.4 * heightRatio;
   const currentp5 = 0.4 + 0.1 * heightRatio;
   const currentp6 = 0;
+  while (true) {
+    if (timeToHighWater > -6) {
+      break;
+    }
+    timeToHighWater = timeToHighWater + 12;
+  }
   if (timeToHighWater > 6) {
-    return [0, "slack"];
+    return [0, "ebbing"];
   } else if (timeToHighWater > 5) {
-    return [0.1, "flooding"];
+    return [0.1, "ebbing"];
   } else if (timeToHighWater > 4) {
     const current = currentm5 + (currentm4 - currentm5) * (5 - timeToHighWater);
     return [current, "flooding"];
@@ -121,19 +128,18 @@ export const heyshamTidalCurrent = (timeToHighWater, range) => {
   } else if (timeToHighWater > 1) {
     const current = currentm2 + (currentm1 - currentm2) * (2 - timeToHighWater);
     return [current, "flooding"];
-  }
+  } else if (timeToHighWater > 0) {
   /* high water */
-  else if (timeToHighWater > 0) {
     const current = currentm1 + (currentHW - currentm1) * (1 - timeToHighWater);
     return [current, "flooding"];
   } else if (timeToHighWater > -1) {
-    const current = currentHW + (currentp1 - currentHW) * ( timeToHighWater);
+    const current = currentHW + (currentp1 - currentHW) * timeToHighWater;
     return [current, "ebbing"];
   } else if (timeToHighWater > -2) {
     const current = currentp1 + (currentp2 - currentp1) * (1 + timeToHighWater);
     return [current, "ebbing"];
   } else if (timeToHighWater > -3) {
-    const current = currentp2 + (currentp3 - currentp2) * (2+ timeToHighWater);
+    const current = currentp2 + (currentp3 - currentp2) * (2 + timeToHighWater);
     return [current, "ebbing"];
   } else if (timeToHighWater > -4) {
     const current = currentp3 + (currentp4 - currentp3) * (3 + timeToHighWater);
@@ -141,6 +147,6 @@ export const heyshamTidalCurrent = (timeToHighWater, range) => {
   } else if (timeToHighWater > -5) {
     return [0.1, "ebbing"];
   } else if (timeToHighWater > -6) {
-    return [0, "slack"];
+    return [0, "ebbing"];
   }
-}
+};
