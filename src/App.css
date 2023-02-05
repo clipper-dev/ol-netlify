@@ -1,5 +1,6 @@
 :root{
 	--fontPrimary: #101010;
+	--fontSecondary: #363636;
 }
 .h1 {
 	font-size: 1.9rem;
@@ -30,4 +31,41 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
+}
+
+.gap-1 {
+	gap: 0.5rem;
+}
+.gray {
+	color: rgb(56, 56, 56);
+}
+.tomato {
+	color: tomato;
+}
+.lime {
+	color: rgb(49, 187, 49);
+}
+.observed{
+	position: relative;
+}
+.observed::after {
+	content: "OBSERVED";
+    font-size: 0.6rem;
+    font-weight: 800;
+	color: rgb(86, 90, 98);
+	position: absolute;
+	top: 22px;
+	right: -6px;
+}
+.prediction{
+	position: relative;
+}
+.prediction::after {
+	content: "PREDICTION";
+    font-size: 0.6rem;
+    font-weight: 800;
+	color: rgb(86, 90, 98);
+	position: absolute;
+	top: 22px;
+	right: -10px;
 }

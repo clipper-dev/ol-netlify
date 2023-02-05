@@ -171,7 +171,7 @@ export const tideHourly = (data, timeNow, timezoneLoaded) => {
     if (_dateObj > timeNow) {
       for (let i = 0; i < 24; i++) {
         const movement =
-          data.tidalHeightOccurrenceList[Number.parseInt(event) + 4 * i]
+          data.tidalHeightOccurrenceList[Number.parseInt(event) + 2 * i + 2]
             .height -
           data.tidalHeightOccurrenceList[Number.parseInt(event) + 2 * i].height;
         let tideTime;
@@ -191,15 +191,17 @@ export const tideHourly = (data, timeNow, timezoneLoaded) => {
           );
         }
         const tide = {
-          time:
+          date:
             tideTime.getFullYear() +
+            "-" +
+            (tideTime.getMonth() > 8
+              ? tideTime.getMonth() + 1
+              : "0" + (tideTime.getMonth() + 1)) +
             "-" +
             (tideTime.getDate() > 9
               ? tideTime.getDate()
-              : "0" + tideTime.getDate()) +
-            "-" +
-            (tideTime.getMonth() + 1) +
-            " " +
+              : "0" + tideTime.getDate()),
+          time:
             (tideTime.getHours() > 9
               ? tideTime.getHours()
               : "0" + tideTime.getHours()) +

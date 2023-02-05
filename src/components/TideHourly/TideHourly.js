@@ -1,11 +1,13 @@
 import React from "react";
 import styles from "./TideHourly.module.css";
-import {FaArrowUp, FaArrowDown} from 'react-icons/fa';
-import {useOutside} from '../../utils/hooks';
+import { FaArrowUp, FaArrowDown, FaLongArrowAltRight, FaLongArrowAltUp, FaLongArrowAltDown } from "react-icons/fa";
+import { useOutside } from "../../utils/hooks";
+import TideHourlyItem from "./TideHourlyItem";
 
 function TideHourly({ port, data, actualHeight, movement, close }) {
   const containerRef = React.useRef(null);
   useOutside(containerRef, close);
+  
   return (
     <div className={styles.main}>
       <div className={styles.container} ref={containerRef}>
@@ -23,10 +25,9 @@ function TideHourly({ port, data, actualHeight, movement, close }) {
           <div className="h3 bold">{movement}</div>
         </div>
         {data.map((tide, index) => {
-          return(<div className={styles.tideItem} key={index}>
-            <div className="h3">{tide.time}</div>
-            <div className="h3 flex">{tide.height} {" "} {tide.movement > 0 ? <FaArrowUp/> : <FaArrowDown/>}</div>
-          </div>)
+          return (
+            <TideHourlyItem key={index} tide={tide} />
+          );
         })}
       </div>
     </div>

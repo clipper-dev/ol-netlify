@@ -3,6 +3,10 @@ import { useEffect, useRef, useState } from "react";
 import "./App.css";
 import Skeleton from "./components/Skeleton";
 import TideHourly from "./components/TideHourly/TideHourly";
+import Wind from "./pages/Wind";
+import Sea from "./pages/Sea";
+import Weather from "./pages/Weather";
+import Settings from "./pages/Settings";
 import styles from "./styles/Home.module.css";
 /* nav functions */
 import {
@@ -11,49 +15,110 @@ import {
   windDegreesToName,
   windForecast,
 } from "./utils/nav";
+import {
+  autoFetchState,
+  lastFetchState,
+  loadedState,
+  skeletonState,
+  timezoneValueState,
+} from "./atoms/fetchAtom";
+import { useRecoilState } from "recoil";
+import { metofficeDataState, showMetofficeState } from "./atoms/metofficeAtom";
+import {
+  heyshamWindDataState,
+  heyshamWindPartnerDataState,
+  heyshamWindPeelsDataState,
+  showHeyshamWindOwnState,
+  showHeyshamWindPartnerState,
+  showHeyshamWindPeelsState,
+  showWarrenpointWindState,
+  warrenpointWindDataState,
+} from "./atoms/windAtom";
+import Tide from "./pages/Tide";
+import {
+  currentHeyshamState,
+  currentWarrenpointState,
+  displayDataHeyshamState,
+  displayDataWarrenpointState,
+  heyshamTideDataHourlyState,
+  heyshamTideDataState,
+  showHeyshamHourlyState,
+  showHeyshamTideState,
+  showWarrenpointHourlyState,
+  showWarrenpointTideState,
+  tidalCurrentHeyshamNowState,
+  warrenpointTideDataHourlyState,
+  warrenpointTideDataState,
+} from "./atoms/tidesAtom";
 
 function App() {
   /* app settings */
-  const [timezoneValue, setTimezoneValue] = useState("UTC");
-  const [autoFetch, setAutofetch] = useState(false);
+  const [timezoneValue, setTimezoneValue] = useRecoilState(timezoneValueState);
+  const [autoFetch, setAutofetch] = useRecoilState(autoFetchState);
   const [autofetchInterval, setAutofetchInterval] = useState("");
   const [currentTab, setCurrentTab] = useState(0);
-  const [currentTabName, setCurrentTabName] = useState("Home");
   const tabs = [
-    { name: "Home", value: "home" },
-    { name: "Hym Wind", value: "heysham" },
-    { name: "Wpt Wind", value: "warrenpoint" },
+    { name: "Tides", value: "tides" },
+    { name: "Wind", value: "wind" },
+    { name: "Sea", value: "sea" },
+    { name: "Weather", value: "weather" },
+    { name: "Settings", value: "settings" },
   ];
   /* state variables */
-  const [showHeyshamHourly, setShowHeyshamHourly] = useState(false);
-  const [showWarrenpointHourly, setShowWarrenpointHourly] = useState(false);
-
-  const [showHeyshamTide, setShowHeyshamTide] = useState(true);
-  const [heyshamTideData, setHeyshamTideData] = useState({});
-
-  const [heyshamTideDataHourly, setHeyshamTideDataHourly] = useState([]);
-
-  const [showWarrenpointTide, setShowWarrenpointTide] = useState(true);
-  const [warrenpointTideData, setWarrenpointTideData] = useState({});
-
-  const [warrenpointTideDataHourly, setWarrenpointTideDataHourly] = useState(
-    []
+  const [showHeyshamHourly, setShowHeyshamHourly] = useRecoilState(
+    showHeyshamHourlyState
+  );
+  const [showWarrenpointHourly, setShowWarrenpointHourly] = useRecoilState(
+    showWarrenpointHourlyState
   );
 
-  const [showHeyshamWindOwn, setShowHeyshamWindOwn] = useState(true);
-  const [heyshamWindData, setHeyshamWindData] = useState({});
+  const [showHeyshamTide, setShowHeyshamTide] =
+    useRecoilState(showHeyshamTideState);
+  const [heyshamTideData, setHeyshamTideData] =
+    useRecoilState(heyshamTideDataState);
 
-  const [showHeyshamWindPartner, setShowHeyshamWindPartner] = useState(true);
-  const [heyshamWindPartnerData, setHeyshamWindPartnerData] = useState({});
+  const [showWarrenpointTide, setShowWarrenpointTide] = useRecoilState(
+    showWarrenpointTideState
+  );
+  const [warrenpointTideData, setWarrenpointTideData] = useRecoilState(
+    warrenpointTideDataState
+  );
 
-  const [showHeyshamWindPeels, setShowHeyshamWindPeels] = useState(true);
-  const [heyshamWindPeelsData, setHeyshamWindPeelsData] = useState({});
+  const [heyshamTideDataHourly, setHeyshamTideDataHourly] = useRecoilState(
+    heyshamTideDataHourlyState
+  );
+  const [warrenpointTideDataHourly, setWarrenpointTideDataHourly] =
+    useRecoilState(warrenpointTideDataHourlyState);
 
-  const [showWarrenpointWindOwn, setShowWarrenpointWindOwn] = useState(true);
-  const [warrenpointWindData, setWarrenpointWindData] = useState({});
+  const [showHeyshamWindOwn, setShowHeyshamWindOwn] = useRecoilState(
+    showHeyshamWindOwnState
+  );
+  const [heyshamWindData, setHeyshamWindData] =
+    useRecoilState(heyshamWindDataState);
 
-  const [showMetoffice, setShowMetoffice] = useState(true);
-  const [metofficeData, setMetofficeData] = useState({});
+  const [showHeyshamWindPartner, setShowHeyshamWindPartner] = useRecoilState(
+    showHeyshamWindPartnerState
+  );
+  const [heyshamWindPartnerData, setHeyshamWindPartnerData] = useRecoilState(
+    heyshamWindPartnerDataState
+  );
+
+  const [showHeyshamWindPeels, setShowHeyshamWindPeels] = useRecoilState(
+    showHeyshamWindPeelsState
+  );
+  const [heyshamWindPeelsData, setHeyshamWindPeelsData] = useRecoilState(
+    heyshamWindPeelsDataState
+  );
+
+  const [showWarrenpointWindOwn, setShowWarrenpointWindOwn] = useRecoilState(
+    showWarrenpointWindState
+  );
+  const [warrenpointWindData, setWarrenpointWindData] = useRecoilState(
+    warrenpointWindDataState
+  );
+
+  const [showMetoffice, setShowMetoffice] = useRecoilState(showMetofficeState);
+  const [metofficeData, setMetofficeData] = useRecoilState(metofficeDataState);
 
   const [showHeyshamWindForecast, setShowHeyshamWindForecast] = useState(true);
   const [heyshamWindForecast, setHeyshamWindForecast] = useState({});
@@ -62,25 +127,34 @@ function App() {
     useState(true);
   const [warrenpointWindForecast, setWarrenpointWindForecast] = useState({});
 
-    /* functions */
-    function closeHeyshamHourly() {
-      setShowHeyshamHourly(false);
-    }
-    function closeWarrenpointHourly() {
-      setShowWarrenpointHourly(false);
-    }
+  /* functions */
+  function closeHeyshamHourly() {
+    setShowHeyshamHourly(false);
+  }
+  function closeWarrenpointHourly() {
+    setShowWarrenpointHourly(false);
+  }
 
   /* loading state */
-  const [lastFetch, setLastFetch] = useState("Scooby doo?");
-  const [loaded, setLoaded] = useState(false);
-  const [skeleton, setSkeleton] = useState(false);
+  const [loaded, setLoaded] = useRecoilState(loadedState);
+  const [skeleton, setSkeleton] = useRecoilState(skeletonState);
+  const [lastFetch, setLastFetch] = useRecoilState(lastFetchState);
 
-  const [displayDataHeysham, setDisplayDataHeysham] = useState({});
-  const [displayDataWarrenpoint, setDisplayDataWarrenpoint] = useState({});
-  const [currentHeysham, setCurrentHeysham] = useState({});
-  const [tidalCurrentHeyshamNow, setTidalCurrentHeyshamNow] = useState({});
+  const [displayDataHeysham, setDisplayDataHeysham] = useRecoilState(
+    displayDataHeyshamState
+  );
+  const [displayDataWarrenpoint, setDisplayDataWarrenpoint] = useRecoilState(
+    displayDataWarrenpointState
+  );
+  const [currentHeysham, setCurrentHeysham] =
+    useRecoilState(currentHeyshamState);
+  const [tidalCurrentHeyshamNow, setTidalCurrentHeyshamNow] = useRecoilState(
+    tidalCurrentHeyshamNowState
+  );
+  const [currentWarrenpoint, setCurrentWarrenpoint] = useRecoilState(
+    currentWarrenpointState
+  );
 
-  const [currentWarrenpoint, setCurrentWarrenpoint] = useState({});
   const [errorPopup, setErrorPopup] = useState(false);
   /* fetch data */
   const fetchData = async (timezoneLoaded) => {
@@ -250,7 +324,11 @@ function App() {
       setShowHeyshamTide(false);
     }
     /* TIDE HEYSHAM HOURLY */
-    const hymHourly = tideHourly(heyshamTideDataRes.data.data, currentDate, timezoneLoaded);
+    const hymHourly = tideHourly(
+      heyshamTideDataRes.data.data,
+      currentDate,
+      timezoneLoaded
+    );
     setHeyshamTideDataHourly(hymHourly);
     console.log("hujszam", hymHourly);
 
@@ -342,7 +420,11 @@ function App() {
       setShowWarrenpointTide(false);
     }
     /* TIDE WARRENPOINT HOURLY */
-    const wptHourly = tideHourly(warrenpointTideDataRes.data.data, currentDate, timezoneLoaded);
+    const wptHourly = tideHourly(
+      warrenpointTideDataRes.data.data,
+      currentDate,
+      timezoneLoaded
+    );
     setWarrenpointTideDataHourly(wptHourly);
     console.log("wpt", wptHourly);
 
@@ -654,11 +736,13 @@ function App() {
               time:
                 _dateObj1.getFullYear() +
                 "-" +
+                (_dateObj1.getMonth() > 8
+                  ? _dateObj1.getMonth() + 1
+                  : "0" + (_dateObj1.getMonth() + 1)) +
+                "-" +
                 (_dateObj1.getDate() > 9
                   ? _dateObj1.getDate()
                   : "0" + _dateObj1.getDate()) +
-                "-" +
-                (_dateObj1.getMonth() + 1) +
                 " " +
                 (_dateObj1.getHours() > 9
                   ? _dateObj1.getHours()
@@ -676,13 +760,13 @@ function App() {
               time:
                 _dateObj2.getFullYear() +
                 "-" +
-                (_dateObj2.getDate() > 9
-                  ? _dateObj2.getDate()
-                  : "0" + _dateObj2.getDate()) +
-                "-" +
                 (_dateObj2.getMonth() > 8
                   ? _dateObj2.getMonth() + 1
                   : "0" + (_dateObj2.getMonth() + 1)) +
+                "-" +
+                (_dateObj2.getDate() > 9
+                  ? _dateObj2.getDate()
+                  : "0" + _dateObj2.getDate()) +
                 " " +
                 (_dateObj2.getHours() > 9
                   ? _dateObj2.getHours()
@@ -701,13 +785,13 @@ function App() {
               time:
                 _dateObj3.getFullYear() +
                 "-" +
-                (_dateObj3.getDate() > 9
-                  ? _dateObj3.getDate()
-                  : "0" + _dateObj3.getDate()) +
-                "-" +
                 (_dateObj3.getMonth() > 8
                   ? _dateObj3.getMonth() + 1
                   : "0" + (_dateObj3.getMonth() + 1)) +
+                "-" +
+                (_dateObj3.getDate() > 9
+                  ? _dateObj3.getDate()
+                  : "0" + _dateObj3.getDate()) +
                 " " +
                 (_dateObj3.getHours() > 9
                   ? _dateObj3.getHours()
@@ -725,13 +809,13 @@ function App() {
               time:
                 _dateObj4.getFullYear() +
                 "-" +
-                (_dateObj4.getDate() > 9
-                  ? _dateObj4.getDate()
-                  : "0" + _dateObj4.getDate()) +
-                "-" +
                 (_dateObj4.getMonth() > 8
                   ? _dateObj4.getMonth() + 1
                   : "0" + (_dateObj4.getMonth() + 1)) +
+                "-" +
+                (_dateObj4.getDate() > 9
+                  ? _dateObj4.getDate()
+                  : "0" + _dateObj4.getDate()) +
                 " " +
                 (_dateObj4.getHours() > 9
                   ? _dateObj4.getHours()
@@ -801,13 +885,13 @@ function App() {
               time:
                 _dateObj1.getFullYear() +
                 "-" +
-                (_dateObj1.getDate() > 9
-                  ? _dateObj1.getDate()
-                  : "0" + _dateObj1.getDate()) +
-                "-" +
                 (_dateObj1.getMonth() > 8
                   ? _dateObj1.getMonth() + 1
                   : "0" + (_dateObj1.getMonth() + 1)) +
+                "-" +
+                (_dateObj1.getDate() > 9
+                  ? _dateObj1.getDate()
+                  : "0" + _dateObj1.getDate()) +
                 " " +
                 (_dateObj1.getHours() > 9
                   ? _dateObj1.getHours()
@@ -825,13 +909,13 @@ function App() {
               time:
                 _dateObj2.getFullYear() +
                 "-" +
-                (_dateObj2.getDate() > 9
-                  ? _dateObj2.getDate()
-                  : "0" + _dateObj2.getDate()) +
-                "-" +
                 (_dateObj2.getMonth() > 8
                   ? _dateObj2.getMonth() + 1
                   : "0" + (_dateObj2.getMonth() + 1)) +
+                "-" +
+                (_dateObj2.getDate() > 9
+                  ? _dateObj2.getDate()
+                  : "0" + _dateObj2.getDate()) +
                 " " +
                 (_dateObj2.getHours() > 9
                   ? _dateObj2.getHours()
@@ -849,13 +933,13 @@ function App() {
               time:
                 _dateObj3.getFullYear() +
                 "-" +
-                (_dateObj3.getDate() > 9
-                  ? _dateObj3.getDate()
-                  : "0" + _dateObj3.getDate()) +
-                "-" +
                 (_dateObj3.getMonth() > 8
                   ? _dateObj3.getMonth() + 1
                   : "0" + (_dateObj3.getMonth() + 1)) +
+                "-" +
+                (_dateObj3.getDate() > 9
+                  ? _dateObj3.getDate()
+                  : "0" + _dateObj3.getDate()) +
                 " " +
                 (_dateObj3.getHours() > 9
                   ? _dateObj3.getHours()
@@ -873,13 +957,13 @@ function App() {
               time:
                 _dateObj4.getFullYear() +
                 "-" +
+                (_dateObj4.getMonth() > 8
+                  ? _dateObj4.getMonth() + 1
+                  : "0" + (_dateObj4.getMonth() + 1)) +
+                "-" +
                 (_dateObj4.getDate() > 9
                   ? _dateObj4.getDate()
                   : "0" + _dateObj4.getDate()) +
-                "-" +
-                (_dateObj3.getMonth() > 8
-                  ? _dateObj3.getMonth() + 1
-                  : "0" + (_dateObj4.getMonth() + 1)) +
                 " " +
                 (_dateObj4.getHours() > 9
                   ? _dateObj4.getHours()
@@ -924,632 +1008,32 @@ function App() {
       {/* home */}
       {currentTab === 0 && (
         <>
-          {/* heysham hourly */}
-          {loaded && showHeyshamHourly && (
-            <TideHourly
-              port={"Heysham"}
-              actualHeight={heyshamWindPeelsData[0]}
-              movement={currentHeysham.tideState}
-              data={heyshamTideDataHourly}
-              close={closeHeyshamHourly}
-
-            />
-          )}
-          {/* warrenpointhourly */}
-          {loaded && showWarrenpointHourly && (
-            <TideHourly
-              port={"Warrenpoint"}
-              actualHeight={Math.round(100 * currentWarrenpoint.height) / 100}
-              movement={currentWarrenpoint.tideState}
-              data={warrenpointTideDataHourly}
-              close={closeWarrenpointHourly}
-            />
-          )}
-          {/* tides */}
-          <>
-            <div className="h2 bold">Tides 🏊‍♂️</div>
-            {/* heysham tides */}
-            <div
-              className="h2"
-              onClick={() => {
-                setShowHeyshamHourly(true);
-              }}
-            >
-              Heysham
-            </div>
-            {skeleton &&
-              (showHeyshamTide ? (
-                <>
-                  {/* tide - now */}
-                  <div className={styles.tideItem}>
-                    <div className="h3">{loaded ? "Observed" : "tttt"}</div>
-                    <div className="h3">
-                      {loaded ? heyshamWindPeelsData[0] + " m, " : "nnnn"}
-                    </div>
-                    <div className="h3 bold">
-                      {loaded ? currentHeysham.tideState : "nnnn"}
-                    </div>
-                  </div>
-                  <div className={styles.tideItem}>
-                    <div className="h3">{loaded ? "Surge" : "tttt"}</div>
-                    <div className="h3">
-                      {loaded ? heyshamWindPeelsData[2] + " m" : "nnnn"}
-                    </div>
-                  </div>
-                  <div className={styles.tideItem}>
-                    <div className="h3">{loaded ? "Prediction" : "tttt"}</div>
-                    <div className="h3">
-                      {loaded ? heyshamWindPeelsData[1] + " m" : "nnnn"}
-                    </div>
-                  </div>
-                  {/* tide - 0 */}
-                  <div className={styles.tideItem}>
-                    <div className="h3">
-                      {loaded
-                        ? displayDataHeysham.heyshamTides[0].time
-                        : "tttt"}
-                    </div>
-                    <div className="h3">
-                      {loaded
-                        ? Math.round(
-                            100 * displayDataHeysham.heyshamTides[0].height
-                          ) /
-                            100 +
-                          " m"
-                        : "nnnn"}
-                    </div>
-                  </div>
-                  {/* tide - 1 */}
-                  <div className={styles.tideItem}>
-                    <div className="h3">
-                      {loaded
-                        ? displayDataHeysham.heyshamTides[1].time
-                        : "tttt"}
-                    </div>
-                    <div className="h3">
-                      {loaded
-                        ? Math.round(
-                            100 * displayDataHeysham.heyshamTides[1].height
-                          ) /
-                            100 +
-                          " m"
-                        : "nnnn"}
-                    </div>
-                  </div>
-                  {/* tide - 2 */}
-                  <div className={styles.tideItem}>
-                    <div className="h3">
-                      {loaded
-                        ? displayDataHeysham.heyshamTides[2].time
-                        : "tttt"}
-                    </div>
-                    <div className="h3">
-                      {loaded
-                        ? Math.round(
-                            100 * displayDataHeysham.heyshamTides[2].height
-                          ) /
-                            100 +
-                          " m"
-                        : "nnnn"}
-                    </div>
-                  </div>
-                  {/* tide - 3 */}
-                  <div className={styles.tideItem}>
-                    <div className="h3">
-                      {loaded
-                        ? displayDataHeysham.heyshamTides[3].time
-                        : "tttt"}
-                    </div>
-                    <div className="h3">
-                      {loaded
-                        ? Math.round(
-                            100 * displayDataHeysham.heyshamTides[3].height
-                          ) /
-                            100 +
-                          " m"
-                        : "nnnn"}
-                    </div>
-                  </div>
-                </>
-              ) : (
-                <h2>Failed to load tidal data.</h2>
-              ))}
-            {!skeleton && (
-              <>
-                <Skeleton />
-                <Skeleton />
-                <Skeleton />
-                <Skeleton />
-                <Skeleton />
-                <Skeleton />
-                <Skeleton />
-              </>
-            )}
-
-            {/* warrenpoint tides */}
-            <div
-              className="h2"
-              onClick={() => {
-                setShowWarrenpointHourly(true);
-              }}
-            >
-              Warrenpoint
-            </div>
-            {skeleton &&
-              (showWarrenpointTide ? (
-                <>
-                  {/* tide - now */}
-                  <div className={styles.tideItem}>
-                    <div className="h3">{loaded ? "Now" : "tttt"}</div>
-                    <div className="h3">
-                      {loaded
-                        ? Math.round(100 * currentWarrenpoint.height) / 100 +
-                          " m, "
-                        : "nnnn"}
-                    </div>
-                    <div className="h3 bold">
-                      {loaded ? currentWarrenpoint.tideState : "nnnn"}
-                    </div>
-                  </div>
-                  {/* tide - 0 */}
-                  <div className={styles.tideItem}>
-                    <div className="h3">
-                      {loaded
-                        ? displayDataWarrenpoint.warrenpointTides[0].time
-                        : "tttt"}
-                    </div>
-                    <div className="h3">
-                      {loaded
-                        ? Math.round(
-                            100 *
-                              displayDataWarrenpoint.warrenpointTides[0].height
-                          ) /
-                            100 +
-                          " m"
-                        : "nnnn"}
-                    </div>
-                  </div>
-                  {/* tide - 1 */}
-                  <div className={styles.tideItem}>
-                    <div className="h3">
-                      {loaded
-                        ? displayDataWarrenpoint.warrenpointTides[1].time
-                        : "tttt"}
-                    </div>
-                    <div className="h3">
-                      {loaded
-                        ? Math.round(
-                            100 *
-                              displayDataWarrenpoint.warrenpointTides[1].height
-                          ) /
-                            100 +
-                          " m"
-                        : "nnnn"}
-                    </div>
-                  </div>
-                  {/* tide - 2 */}
-                  <div className={styles.tideItem}>
-                    <div className="h3">
-                      {loaded
-                        ? displayDataWarrenpoint.warrenpointTides[2].time
-                        : "tttt"}
-                    </div>
-                    <div className="h3">
-                      {loaded
-                        ? Math.round(
-                            100 *
-                              displayDataWarrenpoint.warrenpointTides[2].height
-                          ) /
-                            100 +
-                          " m"
-                        : "nnnn"}
-                    </div>
-                  </div>
-                  {/* tide - 3 */}
-                  <div className={styles.tideItem}>
-                    <div className="h3">
-                      {loaded
-                        ? displayDataWarrenpoint.warrenpointTides[3].time
-                        : "tttt"}
-                    </div>
-                    <div className="h3">
-                      {loaded
-                        ? Math.round(
-                            100 *
-                              displayDataWarrenpoint.warrenpointTides[3].height
-                          ) /
-                            100 +
-                          " m"
-                        : "nnnn"}
-                    </div>
-                  </div>
-                </>
-              ) : (
-                <h2>Failed to load tidal data.</h2>
-              ))}
-            {!skeleton && (
-              <>
-                <Skeleton />
-                <Skeleton />
-                <Skeleton />
-                <Skeleton />
-                <Skeleton />
-              </>
-            )}
-          </>
-          <div className={styles.divider}></div>
-
-          {/* wind */}
-          <div className="h2 bold">Wind 💨</div>
-          <div className="h2">Heysham</div>
-          {skeleton && (
-            <>
-              {showHeyshamWindOwn ? (
-                <>
-                  <div className={styles.tideItem}>
-                    <div className="h3">Own</div>
-                    <div className="h3">
-                      {loaded
-                        ? heyshamWindData.averagewindspeed + " kn"
-                        : "tttt"}
-                    </div>
-                    <div className="h3">
-                      {loaded
-                        ? windDegreesToName(
-                            Number.parseInt(heyshamWindData.winddirection)
-                          )
-                        : "nnnn"}
-                    </div>
-                  </div>
-                  <div className={styles.tideItem}>
-                    <div className="h3">Gust</div>
-                    <div className="h3">
-                      {loaded ? heyshamWindData.highwindspeed + " kn" : "tttt"}
-                    </div>
-                    <div className="h3">
-                      {loaded
-                        ? windDegreesToName(
-                            Number.parseInt(heyshamWindData.winddirection)
-                          )
-                        : "nnnn"}
-                    </div>
-                  </div>
-                </>
-              ) : (
-                <h2>Failed to load own wind data.</h2>
-              )}
-              {showHeyshamWindPeels ? (
-                <>
-                  <div className={styles.tideItem}>
-                    <div className="h3">Peels</div>
-                    <div className="h3">
-                      {loaded ? heyshamWindPeelsData[4] + " kn" : "tttt"}
-                    </div>
-                    <div className="h3">
-                      {loaded
-                        ? windDegreesToName(
-                            Number.parseInt(heyshamWindPeelsData[3])
-                          )
-                        : "nnnn"}
-                    </div>
-                  </div>
-                  <div className={styles.tideItem}>
-                    <div className="h3">Gust Peels</div>
-                    <div className="h3">
-                      {loaded ? heyshamWindPeelsData[6] + " kn" : "tttt"}
-                    </div>
-                    <div className="h3">
-                      {loaded
-                        ? windDegreesToName(
-                            Number.parseInt(heyshamWindPeelsData[5])
-                          )
-                        : "nnnn"}
-                    </div>
-                  </div>
-                </>
-              ) : (
-                <h2>Failed to load peels wind data.</h2>
-              )}
-              {showHeyshamWindPartner ? (
-                <>
-                  <div className={styles.tideItem}>
-                    <div className="h3">Partner</div>
-                    <div className="h3">
-                      {loaded ? heyshamWindPartnerData[1] + " kn" : "tttt"}
-                    </div>
-                    <div className="h3">
-                      {loaded
-                        ? windDegreesToName(
-                            Number.parseInt(heyshamWindPartnerData[2])
-                          )
-                        : "nnnn"}
-                    </div>
-                  </div>
-                  <div className={styles.tideItem}>
-                    <div className="h3">Gust Partner</div>
-                    <div className="h3">
-                      {loaded ? heyshamWindPartnerData[0] + " kn" : "tttt"}
-                    </div>
-                    <div className="h3">
-                      {loaded
-                        ? windDegreesToName(
-                            Number.parseInt(heyshamWindPartnerData[2])
-                          )
-                        : "nnnn"}
-                    </div>
-                  </div>
-                </>
-              ) : (
-                <h2>Failed to load partner wind data.</h2>
-              )}
-            </>
-          )}
-          {!skeleton && (
-            <>
-              <Skeleton />
-              <Skeleton />
-              <Skeleton />
-              <Skeleton />
-              <Skeleton />
-              <Skeleton />
-            </>
-          )}
-          <div className="h2">Warrenpoint</div>
-          {skeleton &&
-            (showWarrenpointWindOwn ? (
-              <>
-                <div className={styles.tideItem}>
-                  <div className="h3">Average</div>
-                  <div className="h3">
-                    {loaded
-                      ? warrenpointWindData.averagewindspeed + " kn"
-                      : "tttt"}
-                  </div>
-                  <div className="h3">
-                    {loaded
-                      ? windDegreesToName(
-                          Number.parseInt(warrenpointWindData.winddirection)
-                        )
-                      : "nnnn"}
-                  </div>
-                </div>
-                <div className={styles.tideItem}>
-                  <div className="h3">Max</div>
-                  <div className="h3">
-                    {loaded
-                      ? warrenpointWindData.highwindspeed + " kn"
-                      : "tttt"}
-                  </div>
-                  <div className="h3">
-                    {loaded
-                      ? windDegreesToName(
-                          Number.parseInt(warrenpointWindData.winddirection)
-                        )
-                      : "nnnn"}
-                  </div>
-                </div>
-              </>
-            ) : (
-              <h2>Failed to load own wind data.</h2>
-            ))}
-          {!skeleton && (
-            <>
-              <Skeleton />
-              <Skeleton />
-            </>
-          )}
-          <div className={styles.divider}></div>
-
-          {/* metoffice weather section */}
-          <div className="h2 bold">Weather forecast 🔆</div>
-
-          {skeleton &&
-            (showMetoffice ? (
-              metofficeData[0].gale && (
-                <>
-                  <div className="bold">{metofficeData[5]}</div>
-                  <div className="h2">Gale warning</div>
-
-                  <div className={styles.tideItem}>
-                    <div className="h3">
-                      {loaded ? metofficeData[0].issueTime : "tttt"}
-                    </div>
-                  </div>
-                  <div className={styles.tideItem}>
-                    <div className="h3">
-                      {loaded ? metofficeData[0].galeText : "No gale warning"}
-                    </div>
-                  </div>
-                </>
-              )
-            ) : (
-              <h2>Failed to load gale forecast.</h2>
-            ))}
-          {/* one sections of skeleton animation */}
-          {!skeleton && (
-            <>
-              <Skeleton />
-            </>
-          )}
-          {skeleton &&
-            (showMetoffice ? (
-              <>
-                <div className="h2">Wind</div>
-                <div className={styles.tideItem}>
-                  <div className="h3">{loaded ? metofficeData[1] : "tttt"}</div>
-                </div>
-                <div className="h2">Sea</div>
-                <div className={styles.tideItem}>
-                  <div className="h3">{loaded ? metofficeData[2] : "tttt"}</div>
-                </div>
-                <div className="h2">Weather</div>
-                <div className={styles.tideItem}>
-                  <div className="h3">{loaded ? metofficeData[3] : "tttt"}</div>
-                </div>
-                <div className="h2">Visibility</div>
-                <div className={styles.tideItem}>
-                  <div className="h3">{loaded ? metofficeData[4] : "tttt"}</div>
-                </div>
-              </>
-            ) : (
-              <h2>Failed to load weather forecast.</h2>
-            ))}
-          {/* one sections of skeleton animation */}
-          {!skeleton && (
-            <>
-              <div className="h2">Wind</div>
-              <Skeleton />
-              <div className="h2">Sea</div>
-              <Skeleton />
-              <div className="h2">Weather</div>
-              <Skeleton />
-              <div className="h2">Visibility</div>
-              <Skeleton />
-            </>
-          )}
-          <div className={styles.divider}></div>
-          {/* currents section */}
-          <div className="h2 bold">Current 💦</div>
-          <div className="h2">Heysham</div>
-          {skeleton && (
-            <>
-              <div className={styles.tideItem}>
-                <div className="h3">Now</div>
-                <div className="h3">
-                  {loaded
-                    ? Math.round(10 * tidalCurrentHeyshamNow.height) / 10 +
-                      " kn"
-                    : "Nan kn"}
-                </div>
-                <div className="h3">
-                  {loaded ? tidalCurrentHeyshamNow.direction : "Nan"}
-                </div>
-              </div>
-            </>
-          )}
-          {!skeleton && (
-            <>
-              <Skeleton />
-            </>
-          )}
-          <div className={styles.divider}></div>
-
-          {/* settings section */}
-          <div className="h2 bold">Settings ⚙</div>
-          <>
-            {/* choose time zone */}
-            <div className="h2">
-              Time zone: {timezoneValue === "en-GB" ? "UTC+1" : "UTC"}
-            </div>
-            <div className={styles.tideItem}>
-              <span>Change timezone: </span>
-              {/* <select
-              onChange={(e) => {
-                setTimezone(e.target.value);
-              }}
-              ref={timezoneSelect}
-              id="timezoneSelectID"
-            >
-              <option value=""></option>
-              <option value="UTC">UTC</option>
-              <option value="en-GB">BST</option>
-            </select> */}
-              <div className={styles["toggle-outer"]} onClick={toggleTimezone}>
-                <div
-                  className={
-                    timezoneValue === "UTC"
-                      ? [
-                          styles["toggle-inner"],
-                          styles["toggle-inner-left"],
-                        ].join(" ")
-                      : [
-                          styles["toggle-inner"],
-                          styles["toggle-inner-right"],
-                        ].join(" ")
-                  }
-                >
-                  <span className={styles["toggle-text"]}>UTC+1</span>
-                  <span className={styles["toggle-text"]}>UTC</span>
-                  <div
-                    className={
-                      timezoneValue === "UTC"
-                        ? [styles["handle"], styles["handle-left"]].join(" ")
-                        : [styles["handle"], styles["handle-right"]].join(" ")
-                    }
-                  />
-                </div>
-              </div>
-            </div>
-          </>
-          <>
-            {/* choose time zone */}
-            <div className="h2">Auto refresh: {autoFetch ? "On" : "Off"}</div>
-            <div className={styles.tideItem}>
-              <span>Toggle auto refresh: </span>
-              {/* <select
-              onChange={(e) => {
-                setTimezone(e.target.value);
-              }}
-              ref={timezoneSelect}
-              id="timezoneSelectID"
-            >
-              <option value=""></option>
-              <option value="UTC">UTC</option>
-              <option value="en-GB">BST</option>
-            </select> */}
-              <div
-                className={styles["toggle-outer"]}
-                onClick={() => {
-                  toggleAutofetch(!autoFetch);
-                }}
-              >
-                <div
-                  className={
-                    !autoFetch
-                      ? [
-                          styles["toggle-inner"],
-                          styles["toggle-inner-left"],
-                        ].join(" ")
-                      : [
-                          styles["toggle-inner"],
-                          styles["toggle-inner-right"],
-                        ].join(" ")
-                  }
-                >
-                  <span className={styles["toggle-text"]}>On</span>
-                  <span className={styles["toggle-text"]}>Off</span>
-                  <div
-                    className={
-                      !autoFetch
-                        ? [styles["handle"], styles["handle-left"]].join(" ")
-                        : [styles["handle"], styles["handle-right"]].join(" ")
-                    }
-                  />
-                </div>
-              </div>
-            </div>
-          </>
-          <div className={styles.divider}></div>
-          <div className="h4">2022, all rights reserved.</div>
-          {/* error popup */}
-          {errorPopup && (
-            <div className={styles["error-popup"]}>
-              <div
-                className={styles["error-popup-close"]}
-                onClick={() => {
-                  setErrorPopup(false);
-                }}
-              >
-                Close
-              </div>
-              <div className={styles["error-popup-text"]}>
-                There seems to be a problem with connection.
-              </div>
-            </div>
-          )}
+          <Tide />
         </>
       )}
-      {currentTab === 1 && showHeyshamWindForecast && <></>}
+      {currentTab === 1 && (
+        <>
+          <Wind />
+        </>
+      )}
+      {currentTab === 2 && (
+        <>
+          <Sea />
+        </>
+      )}
+      {currentTab === 3 && (
+        <>
+          <Weather />
+        </>
+      )}
+      {currentTab === 4 && (
+        <>
+          <Settings
+            toggleAutofetch={toggleAutofetch}
+            toggleTimezone={toggleTimezone}
+          />
+        </>
+      )}
     </div>
   );
 }
