@@ -1,0 +1,53 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+.text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: rgb(86, 90, 98);
+}
+.button {
+    font-weight: 700;
+    font-size: 1.9rem;
+    border-radius: 5px;
+    padding: 1rem 2rem;
+    background-color: rgb(184, 250, 171);
+    animation: pulsate 3s ease-in-out infinite;
+    transition: all 0.1s ease-in-out;
+    /* non selectable text */
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Opera and Firefox */
+
+}
+@keyframes pulsate {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0px rgba(0, 0, 0, 0.3);
+    }
+    70% {
+        box-shadow: 0 0 0 12px rgba(0, 0, 0, 0);
+    }
+}
+.button:hover {
+    background-color: rgb(184, 250, 171);
+    box-shadow: 0 0 0 12px rgba(0, 0, 0, 0);
+    animation: none;
+    cursor: pointer;
+}
+.button:active {
+    scale: 0.95;
+}

@@ -1,8 +1,11 @@
 import React from 'react'
+import Purchase from '../../components/Purchase'
 
 function Sea() {
   return (
-    <div>Sea</div>
+    <div>
+      <Purchase/>
+    </div>
   )
 }
 
