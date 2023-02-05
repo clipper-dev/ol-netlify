@@ -8,6 +8,7 @@
 .h2 {
 	font-size: 1.5rem;
 	margin: 1rem;
+	cursor: pointer;
 }
 .h3 {
 	font-size: 1.17rem;
@@ -20,4 +21,13 @@
 }
 .bold{
 	font-weight: 800;
+}
+.cursorPointer{
+	cursor: pointer;
+}
+
+.flex {
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }

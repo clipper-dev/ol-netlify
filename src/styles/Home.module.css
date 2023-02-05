@@ -108,3 +108,23 @@
 .error-popup-text {
 	font-size: 1.2rem;
 }
+
+
+/* tabs */
+.tabs {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  align-items: center;
+}
+.tab, .tabActive {
+  padding: 0.5rem;
+  border-radius: 5px;
+  border: 1px solid #eaeaea;
+  cursor: pointer;
+  transition: all 0.1s ease-in-out;
+}
+.tabActive {
+  background-color: #d4e9ff;
+  border: 1px solid #eaeaea;
+}

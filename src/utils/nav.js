@@ -129,7 +129,7 @@ export const heyshamTidalCurrent = (timeToHighWater, range) => {
     const current = currentm2 + (currentm1 - currentm2) * (2 - timeToHighWater);
     return [current, "flooding"];
   } else if (timeToHighWater > 0) {
-  /* high water */
+    /* high water */
     const current = currentm1 + (currentHW - currentm1) * (1 - timeToHighWater);
     return [current, "flooding"];
   } else if (timeToHighWater > -1) {
@@ -149,4 +149,79 @@ export const heyshamTidalCurrent = (timeToHighWater, range) => {
   } else if (timeToHighWater > -6) {
     return [0, "ebbing"];
   }
+};
+
+export const windForecast = (dom) => {
+  let data = dom;
+  data = data.getElementsByTagName("body")[0].children[0].children[1];
+  data = data.querySelectorAll(`[id="fc-table"]`)[0];
+
+  return data;
+};
+
+export const tideHourly = (data, timeNow, timezoneLoaded) => {
+  /* looping for the current prediction */
+  let tides = [];
+  for (const event in data.tidalHeightOccurrenceList) {
+    const _date = data.tidalHeightOccurrenceList[event].dateTime;
+
+    /* compare currentDate and _date and check which is later */
+    const _dateObj = new Date(_date);
+
+    if (_dateObj > timeNow) {
+      for (let i = 0; i < 24; i++) {
+        const movement =
+          data.tidalHeightOccurrenceList[Number.parseInt(event) + 4 * i]
+            .height -
+          data.tidalHeightOccurrenceList[Number.parseInt(event) + 2 * i].height;
+        let tideTime;
+        if (timezoneLoaded === "en-GB") {
+          tideTime = new Date(
+            new Date(
+              data.tidalHeightOccurrenceList[
+                Number.parseInt(event) + 2 * i
+              ].dateTime
+            ).getTime() + 3600000
+          );
+        } else {
+          tideTime = new Date(
+            data.tidalHeightOccurrenceList[
+              Number.parseInt(event) + 2 * i
+            ].dateTime
+          );
+        }
+        const tide = {
+          time:
+            tideTime.getFullYear() +
+            "-" +
+            (tideTime.getDate() > 9
+              ? tideTime.getDate()
+              : "0" + tideTime.getDate()) +
+            "-" +
+            (tideTime.getMonth() + 1) +
+            " " +
+            (tideTime.getHours() > 9
+              ? tideTime.getHours()
+              : "0" + tideTime.getHours()) +
+            "" +
+            (tideTime.getMinutes() > 9
+              ? tideTime.getMinutes()
+              : "0" + tideTime.getMinutes()),
+          dateTime:
+            data.tidalHeightOccurrenceList[Number.parseInt(event) + 2 * i]
+              .dateTime,
+          height:
+            Math.round(
+              100 *
+                data.tidalHeightOccurrenceList[Number.parseInt(event) + 2 * i]
+                  .height
+            ) / 100,
+          movement: Math.round(100 * movement) / 100,
+        };
+        tides.push(tide);
+      }
+      return tides;
+    }
+  }
+  return tides;
 };
