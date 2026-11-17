@@ -489,6 +489,7 @@ function App() {
       setShowHeyshamWindPartner(false);
     }
     /* peels WX data */
+/*     
     let _showHeyshamWindPeels = true;
     const peelsData = await axios
       .get("/.netlify/functions/peels")
@@ -522,12 +523,12 @@ function App() {
       peels.push(
         htmlPeels.querySelectorAll('[Parameter="50006"]')[0].textContent
       ); //gust speed
-      /* success */
       setShowHeyshamWindPeels(true);
       setHeyshamWindPeelsData(peels);
     } else {
       setShowHeyshamWindPeels(false);
-    }
+    } 
+    */
     /* fetching metoffice data */
     let _metofficeData = true;
     const metoffice = await axios

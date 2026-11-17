@@ -1,7 +1,7 @@
 import React from "react";
 import { FaLock } from "react-icons/fa";
 import styles from "./Purchase.module.css";
-import confetti from "https://cdn.skypack.dev/canvas-confetti";
+import confetti from "canvas-confetti";
 
 export default function Purchase() {
   return (

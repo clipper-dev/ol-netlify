@@ -93,7 +93,7 @@ function Wind() {
           ) : (
             <h2>Failed to load own wind data.</h2>
           )}
-          {showHeyshamWindPeels ? (
+          {/* {showHeyshamWindPeels ? (
             <>
               <div className={styles.tideItem}>
                 <div className="h3">Peels</div>
@@ -124,7 +124,7 @@ function Wind() {
             </>
           ) : (
             <h2>Failed to load peels wind data.</h2>
-          )}
+          )} */}
           {showHeyshamWindPartner ? (
             <>
               <div className={styles.tideItem}>

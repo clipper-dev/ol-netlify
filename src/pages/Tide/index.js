@@ -96,26 +96,29 @@ function Tide() {
               (showHeyshamTide ? (
                 <>
                   {/* tide - now */}
-                  <div className={styles.tideItem}>
+                  {/* <div className={styles.tideItem}>
                     <div className="h3 observed">{loaded ? "Now" : "tttt"}</div>
                     <div className="h3">
                       {loaded ? heyshamWindPeelsData[0] + " m, " : "nnnn"}
                     </div>
-                    <div className="h3 bold">
-                      {loaded ? currentHeysham.tideState : "nnnn"}
                     </div>
-                  </div>
-                  <div className={styles.tideItem}>
+                    <div className={styles.tideItem}>
                     <div className="h3">{loaded ? "Surge" : "tttt"}</div>
                     <div className="h3">
-                      {loaded ? heyshamWindPeelsData[2] + " m" : "nnnn"}
+                    {loaded ? heyshamWindPeelsData[2] + " m" : "nnnn"}
                     </div>
-                  </div>
+                  </div> */}
                   <div className={styles.tideItem}>
                     <div className="h3 prediction">{loaded ? "Now" : "tttt"}</div>
                     <div className="h3">
-                      {loaded ? heyshamWindPeelsData[1] + " m" : "nnnn"}
+                    {loaded
+                        ? Math.round(100 * currentHeysham.height) / 100 +
+                          " m, "
+                        : "nnnn"}
                     </div>
+                  <div className="h3 bold">
+                    {loaded ? currentHeysham.tideState : "nnnn"}
+                  </div>
                   </div>
                   {/* tide - 0 */}
                   <div className={styles.tideItem}>
